@@ -1,0 +1,1650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MoneyLab — Secure Flash Transfer </title>
+<style>
+  :root{
+    --bg:#f5f6f8;
+    --surface:#ffffff;
+    --surface-2:#fafbfc;
+    --border:#dfe3e8;
+    --border-2:#c9d0d8;
+    --text:#111418;
+    --dim:#5f6b7a;
+    --faint:#98a2b3;
+    --blue:#2563eb;
+    --blue-dim:#eaf1ff;
+    --green:#059669;
+    --green-dim:#e6f7f0;
+    --purple:#7c3aed;
+    --purple-dim:#f1ebff;
+    --amber:#d97706;
+    --amber-dim:#fdf3e2;
+    --red:#dc2626;
+    --red-dim:#fdecec;
+    --mono:ui-monospace,'SF Mono',Menlo,Consolas,'Liberation Mono',monospace;
+    --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;border-radius:0}
+  html,body{min-height:100%}
+  body{
+    font-family:var(--sans);background:var(--bg);color:var(--text);
+    font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;
+    padding:16px;
+  }
+  .app{max-width:1320px;margin:0 auto;animation:fadeIn .35s ease}
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  @keyframes fadeInB{from{opacity:0}to{opacity:1}}
+
+  /* ================= LOGIN SCREEN ================= */
+  .login-screen{
+    position:fixed;inset:0;background:var(--bg);
+    display:flex;align-items:center;justify-content:center;
+    padding:20px;z-index:200;
+  }
+  .login-card{
+    width:100%;max-width:460px;background:var(--surface);
+    border:1px solid var(--border);padding:36px 32px;
+    box-shadow:0 8px 32px rgba(17,20,24,.08);
+    animation:loginPop .4s cubic-bezier(.2,1.2,.4,1);
+  }
+  @keyframes loginPop{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+  .login-brand{
+    display:flex;align-items:center;gap:12px;margin-bottom:24px;
+    padding-bottom:20px;border-bottom:1px solid var(--border);
+  }
+  .login-brand-mark{
+    width:42px;height:42px;display:grid;place-items:center;font-size:18px;
+    background:var(--blue);color:#fff;font-weight:700;
+  }
+  .login-title{font-size:18px;font-weight:700;letter-spacing:.2px}
+  .login-title span{color:var(--blue)}
+  .login-brand-sub{font-size:11px;color:var(--dim);margin-top:2px}
+  .login-sub{font-size:12px;color:var(--dim);line-height:1.55;margin-bottom:16px}
+  .login-hint{
+    font-size:10.5px;color:var(--dim);background:var(--surface-2);
+    border:1px solid var(--border);border-left:3px solid var(--blue);
+    padding:10px 12px;margin-bottom:20px;line-height:1.5;
+  }
+  .login-hint b{color:var(--text)}
+  .login-field{display:flex;flex-direction:column;gap:7px;margin-bottom:8px}
+  .login-label{
+    font-size:10.5px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;
+    color:var(--dim);
+  }
+  .login-input-wrap{position:relative;display:flex}
+  .login-input{
+    width:100%;background:var(--surface);border:1px solid var(--border-2);
+    padding:13px 46px 13px 14px;font-family:var(--mono);font-size:12px;
+    letter-spacing:.4px;color:var(--text);outline:none;transition:.15s;
+  }
+  .login-input::placeholder{color:var(--faint);font-family:var(--sans);letter-spacing:0;font-size:12px}
+  .login-input:focus{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-dim)}
+  .login-input.err{border-color:var(--red);box-shadow:0 0 0 3px var(--red-dim)}
+  .toggle-key{
+    position:absolute;right:0;top:0;bottom:0;width:42px;border:0;
+    background:transparent;color:var(--dim);cursor:pointer;font-size:14px;
+    display:grid;place-items:center;border-left:1px solid var(--border);
+  }
+  .toggle-key:hover{color:var(--text);background:var(--surface-2)}
+  .login-error{
+    font-size:11px;color:var(--red);min-height:16px;line-height:1.4;
+    margin-bottom:12px;font-weight:600;
+  }
+  .login-error.show{animation:shake .4s ease}
+  @keyframes shake{
+    0%,100%{transform:translateX(0)}
+    20%,60%{transform:translateX(-5px)}
+    40%,80%{transform:translateX(5px)}
+  }
+  .login-btn{
+    width:100%;border:0;padding:14px;font:inherit;font-size:13.5px;
+    font-weight:700;letter-spacing:.4px;text-transform:uppercase;cursor:pointer;
+    background:var(--blue);color:#fff;transition:.15s;
+  }
+  .login-btn:hover{background:#1d4ed8}
+  .login-foot{
+    font-size:10px;color:var(--faint);text-align:center;margin-top:22px;
+    line-height:1.5;padding-top:16px;border-top:1px solid var(--border);
+  }
+
+  /* ================= HEADER ================= */
+  .app-header{
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+    padding:14px 18px;margin-bottom:16px;background:var(--surface);
+    border:1px solid var(--border);flex-wrap:wrap;
+  }
+  .brand{display:flex;align-items:center;gap:12px}
+  .brand-mark{
+    width:38px;height:38px;display:grid;place-items:center;font-size:16px;
+    background:var(--blue);color:#fff;font-weight:700;
+  }
+  .brand-name{font-size:16px;font-weight:700;letter-spacing:.3px}
+  .brand-name span{color:var(--blue)}
+  .brand-sub{font-size:11px;color:var(--dim);margin-top:1px}
+  .header-actions{display:flex;align-items:center;gap:10px}
+
+  .mode-toggle{display:inline-flex;background:var(--surface-2);border:1px solid var(--border)}
+  .mode-btn{
+    border:0;background:transparent;color:var(--dim);font:inherit;font-size:12.5px;
+    font-weight:600;padding:8px 16px;cursor:pointer;transition:.15s;white-space:nowrap;
+    border-right:1px solid var(--border);
+  }
+  .mode-btn:last-child{border-right:0}
+  .mode-btn:hover{color:var(--text);background:#eef1f4}
+  .mode-btn.active{background:var(--blue);color:#fff}
+  .mode-btn.active[data-mode="crypto"]{background:var(--purple)}
+  .mode-btn:disabled{opacity:.5;cursor:not-allowed}
+
+  .icon-btn{
+    position:relative;width:40px;height:40px;border:1px solid var(--border);
+    background:var(--surface-2);color:var(--text);cursor:pointer;
+    font-size:15px;display:grid;place-items:center;transition:.15s;
+  }
+  .icon-btn:hover{background:#eef1f4;border-color:var(--border-2)}
+  .bell-badge{
+    position:absolute;top:-7px;right:-7px;min-width:18px;height:18px;padding:0 4px;
+    background:var(--red);color:#fff;font-size:10px;font-weight:700;
+    display:none;place-items:center;line-height:18px;text-align:center;
+    border:2px solid var(--surface);
+  }
+  .bell-badge.show{display:grid}
+
+  /* ================= MAIN GRID ================= */
+  .main-grid{
+    display:grid;grid-template-columns:400px minmax(0,1fr);gap:16px;align-items:start;
+  }
+  @media (max-width:1000px){ .main-grid{grid-template-columns:1fr} }
+
+  .panel{background:var(--surface);border:1px solid var(--border);padding:20px}
+  .panel-head{margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+  .panel-title{font-size:14.5px;font-weight:700;letter-spacing:.2px}
+  .panel-sub{font-size:11.5px;color:var(--dim);margin-top:3px}
+  .hidden{display:none !important}
+
+  /* ================= FORM ================= */
+  .field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+  .label-row{display:flex;align-items:center;justify-content:space-between}
+  .field-label{
+    font-size:10.5px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;
+    color:var(--dim);
+  }
+  .input,.select{
+    width:100%;background:var(--surface);border:1px solid var(--border-2);
+    padding:10px 12px;color:var(--text);font:inherit;
+    font-size:13.5px;outline:none;transition:border-color .15s,box-shadow .15s;
+  }
+  .input::placeholder{color:var(--faint)}
+  .input:focus,.select:focus{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-dim)}
+  .mono{font-family:var(--mono);font-size:12.5px;letter-spacing:.3px}
+  .select{
+    cursor:pointer;appearance:none;padding-right:32px;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%235f6b7a' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 12px center;
+  }
+  .select option{background:var(--surface);color:var(--text)}
+  .row{display:flex;gap:8px}
+  .row .input{flex:1;min-width:0}
+  .row .select{flex:0 0 110px;width:110px}
+  .hint{font-size:10.5px;color:var(--faint);line-height:1.4;min-height:14px}
+  .hint.err{color:var(--red)}
+  .hint.ok{color:var(--green)}
+  .example-btn{
+    border:1px solid var(--border-2);background:var(--surface);color:var(--dim);
+    font:inherit;font-size:10px;font-weight:600;padding:3px 9px;cursor:pointer;transition:.15s;
+  }
+  .example-btn:hover{color:var(--blue);border-color:var(--blue)}
+
+  .speed-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .speed-card{
+    border:1px solid var(--border-2);padding:10px 12px;cursor:pointer;
+    background:var(--surface);transition:.15s;display:flex;flex-direction:column;gap:1px;
+    user-select:none;position:relative;
+  }
+  .speed-card:hover{border-color:var(--blue)}
+  .speed-card.selected{border-color:var(--blue);background:var(--blue-dim);box-shadow:inset 3px 0 0 var(--blue)}
+  .speed-card.crypto-sel.selected{border-color:var(--purple);background:var(--purple-dim);box-shadow:inset 3px 0 0 var(--purple)}
+  .speed-card .sc-title{font-size:12px;font-weight:600}
+  .speed-card .sc-sub{font-size:10px;color:var(--dim);line-height:1.35}
+  .speed-card input{position:absolute;opacity:0;pointer-events:none}
+
+  .btn-submit{
+    width:100%;border:0;padding:13px;font:inherit;font-size:13.5px;
+    font-weight:700;letter-spacing:.4px;cursor:pointer;background:var(--blue);color:#fff;
+    transition:.15s;margin-top:2px;text-transform:uppercase;
+  }
+  .btn-submit:hover:not(:disabled){background:#1d4ed8}
+  .btn-submit:disabled{opacity:.55;cursor:not-allowed}
+  .btn-submit.crypto{background:var(--purple)}
+  .btn-submit.crypto:hover:not(:disabled){background:#6d28d9}
+  .disclaimer{
+    font-size:10px;color:var(--faint);text-align:center;margin-top:10px;line-height:1.4;
+  }
+  .prefill-note{
+    font-size:10.5px;color:var(--dim);background:var(--surface-2);border:1px solid var(--border);
+    padding:8px 10px;margin-bottom:14px;line-height:1.4;
+  }
+  .prefill-note b{color:var(--text)}
+
+  /* ================= VIZ PANEL ================= */
+  .viz-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+  .reset-btn{
+    border:1px solid var(--border-2);background:var(--surface);color:var(--dim);font:inherit;
+    font-size:10.5px;font-weight:600;padding:5px 12px;cursor:pointer;
+    transition:.15s;white-space:nowrap;text-transform:uppercase;letter-spacing:.4px;
+  }
+  .reset-btn:hover{color:var(--text);border-color:var(--border-2);background:#eef1f4}
+
+  .stepper{
+    position:relative;display:grid;grid-template-columns:repeat(5,1fr);
+    padding:8px 0 0;margin:10px 0 20px;
+  }
+  .rail{
+    position:absolute;left:10%;right:10%;top:26px;height:2px;background:var(--border-2);
+    z-index:0;
+  }
+  .rail-fill{
+    height:100%;width:0;background:var(--blue);
+    transition:width .55s cubic-bezier(.4,0,.2,1);
+  }
+  .rail-dot{
+    position:absolute;top:50%;left:0;width:10px;height:10px;
+    background:var(--blue);transform:translate(-50%,-50%);
+    border:2px solid var(--surface);box-shadow:0 0 0 1px var(--blue);
+    display:none;
+    transition:left .55s cubic-bezier(.4,0,.2,1),background .3s;
+    z-index:2;
+  }
+  .rail-dot.show{display:block}
+  .step-node{
+    display:flex;flex-direction:column;align-items:center;gap:8px;
+    position:relative;z-index:1;
+  }
+  .node-box{
+    width:38px;height:38px;display:grid;place-items:center;
+    background:var(--surface);border:2px solid var(--border-2);font-size:16px;
+    transition:all .3s ease;color:var(--dim);
+  }
+  .node-label{
+    font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;
+    color:var(--faint);text-align:center;transition:color .3s;
+  }
+  .step-node.active .node-box{
+    border-color:var(--blue);background:var(--blue);color:#fff;
+    box-shadow:0 0 0 4px var(--blue-dim);
+  }
+  .step-node.done .node-box{
+    border-color:var(--green);background:var(--green-dim);color:var(--green);
+  }
+  .step-node.active .node-label,.step-node.done .node-label{color:var(--text)}
+
+  .step-list{display:flex;flex-direction:column;gap:6px}
+  .step-item{
+    display:flex;gap:11px;align-items:flex-start;padding:11px 13px;
+    border:1px solid var(--border);background:var(--surface-2);opacity:.55;
+    transition:all .3s ease;border-left:3px solid var(--border);
+  }
+  .step-item.active{opacity:1;border-color:var(--blue);border-left-color:var(--blue);background:var(--blue-dim)}
+  .step-item.done{opacity:1;border-color:var(--green);border-left-color:var(--green);background:var(--green-dim)}
+  .si-icon{font-size:15px;line-height:1.4;flex:0 0 auto}
+  .si-body{flex:1;min-width:0}
+  .si-title{font-size:12.5px;font-weight:700;margin-bottom:2px}
+  .si-kid{font-size:11px;color:var(--dim);line-height:1.5}
+  .si-status{
+    font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;
+    color:var(--faint);white-space:nowrap;padding-top:3px;
+  }
+  .step-item.active .si-status{color:var(--blue)}
+  .step-item.done .si-status{color:var(--green)}
+
+  /* ================= RECEIPT ================= */
+  .receipt{
+    margin-top:16px;border:1px solid var(--green);border-left:4px solid var(--green);
+    background:var(--surface);padding:16px;animation:pop .35s ease;
+  }
+  @keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .receipt-head{
+    display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;
+    color:var(--green);margin-bottom:14px;text-transform:uppercase;letter-spacing:.4px;
+    padding-bottom:10px;border-bottom:1px solid var(--border);
+  }
+  .receipt-grid{
+    display:grid;grid-template-columns:1fr 1fr;gap:12px 16px;margin-bottom:14px;
+  }
+  .ri-label{
+    font-size:9px;text-transform:uppercase;letter-spacing:.7px;color:var(--dim);
+    font-weight:700;margin-bottom:3px;
+  }
+  .ri-value{font-size:12px;font-family:var(--mono);word-break:break-all;line-height:1.4;font-weight:600}
+  .ri-value.green{color:var(--green)}
+  .kid-explain{
+    font-size:11.5px;line-height:1.65;color:var(--text);background:var(--green-dim);
+    border-left:3px solid var(--green);padding:11px 13px;
+  }
+  .kid-explain b{color:var(--green)}
+
+  /* ================= LOG ================= */
+  .log-wrap{margin-top:18px}
+  .log-head{
+    font-size:9.5px;text-transform:uppercase;letter-spacing:.9px;color:var(--dim);
+    font-weight:700;margin-bottom:8px;
+  }
+  .log{
+    height:180px;overflow-y:auto;border:1px solid var(--border);background:var(--surface-2);
+    padding:10px 12px;font-family:var(--mono);font-size:10.5px;line-height:1.9;
+  }
+  .log::-webkit-scrollbar{width:6px}
+  .log::-webkit-scrollbar-thumb{background:var(--border-2)}
+  .log p{margin:0;color:var(--dim);word-break:break-word}
+  .log .t{color:var(--faint);margin-right:8px}
+  .log .c-blue{color:var(--blue);font-weight:600}
+  .log .c-green{color:var(--green);font-weight:600}
+  .log .c-purple{color:var(--purple);font-weight:600}
+  .log .c-amber{color:var(--amber);font-weight:600}
+  .log .c-red{color:var(--red);font-weight:600}
+
+  /* ================= HISTORY ================= */
+  .history-panel{margin-top:16px}
+  .history-list{display:flex;flex-direction:column;gap:6px}
+  .empty-history{
+    text-align:center;color:var(--faint);font-size:12px;padding:24px;
+    border:1px dashed var(--border-2);background:var(--surface-2);
+  }
+  .history-item{
+    display:flex;gap:12px;align-items:flex-start;padding:12px 14px;
+    border:1px solid var(--border);background:var(--surface);border-left:3px solid var(--blue);
+    animation:pop .35s ease;
+  }
+  .history-item.crypto{border-left-color:var(--purple)}
+  .history-icon{
+    width:36px;height:36px;display:grid;place-items:center;
+    background:var(--blue-dim);color:var(--blue);font-size:15px;flex:0 0 auto;
+    border:1px solid var(--blue);
+  }
+  .history-item.crypto .history-icon{background:var(--purple-dim);color:var(--purple);border-color:var(--purple)}
+  .history-body{flex:1;min-width:0}
+  .history-title{font-size:12.5px;font-weight:700;margin-bottom:3px}
+  .history-detail{font-size:11px;color:var(--dim);line-height:1.4;margin-bottom:7px}
+  .history-meta{display:flex;gap:10px;flex-wrap:wrap;align-items:center;font-size:9.5px}
+  .history-ref{font-family:var(--mono);color:var(--faint)}
+  .history-time{color:var(--faint)}
+  .history-status{
+    padding:2px 8px;font-weight:700;letter-spacing:.5px;
+    text-transform:uppercase;font-size:9px;
+  }
+  .history-status.completed{background:var(--green-dim);color:var(--green)}
+  .history-status.pending{background:var(--amber-dim);color:var(--amber)}
+  .history-status.failed{background:var(--red-dim);color:var(--red)}
+
+  /* ================= NOTIFICATIONS PANEL ================= */
+  .notif-backdrop{
+    position:fixed;inset:0;background:rgba(17,20,24,.35);z-index:98;
+    animation:fadeIn .2s ease;
+  }
+  .notif-panel{
+    position:fixed;top:0;right:0;bottom:0;width:380px;max-width:92vw;
+    background:var(--surface);border-left:1px solid var(--border);z-index:99;
+    display:flex;flex-direction:column;
+    animation:slideIn .25s cubic-bezier(.4,0,.2,1);
+  }
+  @keyframes slideIn{from{transform:translateX(100%)}to{transform:translateX(0)}}
+  .notif-head{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:16px 18px;border-bottom:1px solid var(--border);
+  }
+  .close-btn{
+    border:1px solid var(--border-2);background:var(--surface);color:var(--dim);
+    font-size:18px;cursor:pointer;width:30px;height:30px;display:grid;
+    place-items:center;transition:.15s;line-height:1;
+  }
+  .close-btn:hover{background:#eef1f4;color:var(--text)}
+  .notif-list{flex:1;overflow-y:auto;padding:10px}
+  .notif-empty{text-align:center;color:var(--faint);font-size:12px;padding:40px 20px}
+  .notif-item{
+    display:flex;gap:10px;padding:12px 13px;margin-bottom:6px;
+    border:1px solid var(--border);border-left:3px solid var(--blue);background:var(--surface);
+  }
+  .notif-item.good{border-left-color:var(--green)}
+  .notif-item.warn{border-left-color:var(--amber)}
+  .notif-item.bad{border-left-color:var(--red)}
+  .notif-item.unread{background:var(--blue-dim)}
+  .notif-icon{font-size:14px;line-height:1.4;flex:0 0 auto}
+  .notif-body{flex:1;min-width:0}
+  .notif-title{font-size:11.5px;font-weight:700;margin-bottom:2px}
+  .notif-text{font-size:10.5px;color:var(--dim);line-height:1.5}
+  .notif-time{font-size:9px;color:var(--faint);margin-top:5px}
+
+  /* ================= TOASTS ================= */
+  .toast-container{
+    position:fixed;top:16px;right:16px;z-index:100;display:flex;flex-direction:column;
+    gap:8px;max-width:340px;pointer-events:none;
+  }
+  .toast{
+    display:flex;gap:10px;padding:12px 14px;background:var(--surface);
+    border:1px solid var(--border);border-left:4px solid var(--blue);
+    box-shadow:0 8px 24px rgba(17,20,24,.12);animation:toastIn .3s ease;
+    pointer-events:auto;
+  }
+  .toast.out{animation:toastOut .3s ease forwards}
+  @keyframes toastIn{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:none}}
+  @keyframes toastOut{to{opacity:0;transform:translateX(40px)}}
+  .toast.warn{border-left-color:var(--amber)}
+  .toast.good{border-left-color:var(--green)}
+  .toast.bad{border-left-color:var(--red)}
+  .toast b{display:block;font-size:12px;margin-bottom:2px}
+  .toast p{font-size:11px;color:var(--dim);line-height:1.4}
+  .toast.info b{color:var(--blue)}
+  .toast.warn b{color:var(--amber)}
+  .toast.good b{color:var(--green)}
+  .toast.bad b{color:var(--red)}
+  .t-ico{font-size:15px;line-height:1.3;flex:0 0 auto}
+
+  @media (max-width:560px){
+    body{padding:10px}
+    .brand-sub{display:none}
+    .node-label{font-size:8px}
+    .receipt-grid{grid-template-columns:1fr}
+    .speed-row{grid-template-columns:1fr}
+    .login-card{padding:28px 22px}
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= LOGIN SCREEN ================= -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-card">
+    <div class="login-brand">
+      <div class="login-brand-mark">◈</div>
+      <div>
+        <div class="login-title">Money<span>Lab</span></div>
+        <div class="login-brand-sub">Secure access</div>
+      </div>
+    </div>
+
+    <div class="login-sub">
+      This dashboard is protected. Enter your unique access key to open the
+      transfer simulator.
+    </div>
+
+    <div class="login-hint">
+      🔑 <b>Access key required.</b> Ask your instructor or check your
+      materials for the key. It is a 64-character hex string.
+    </div>
+
+    <form id="loginForm" autocomplete="off">
+      <div class="login-field">
+        <label class="login-label" for="loginKey">Access Key</label>
+        <div class="login-input-wrap">
+          <input id="loginKey" class="login-input" type="password"
+                 placeholder="Paste your 64-character key"
+                 spellcheck="false" autocomplete="off">
+          <button type="button" class="toggle-key" id="toggleKeyBtn" title="Show / hide key">👁</button>
+        </div>
+      </div>
+
+      <div class="login-error" id="loginError"></div>
+
+      <button type="submit" class="login-btn" id="loginBtn">Unlock Dashboard →</button>
+    </form>
+
+    <p class="login-foot">
+      Educational simulation only · no real money, accounts, or networks.
+    </p>
+  </div>
+</div>
+
+<!-- ================= APP (hidden until unlocked) ================= -->
+<div class="app hidden" id="appRoot">
+
+  <!-- ---------- HEADER ---------- -->
+  <header class="app-header">
+    <div class="brand">
+      <div class="brand-mark">◈</div>
+      <div>
+        <div class="brand-name">Money<span>Lab</span></div>
+        <div class="brand-sub">Interactive transfer simulator — no real money involved</div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <div class="mode-toggle" role="tablist">
+        <button class="mode-btn active" data-mode="fiat" role="tab">🏦 Bank</button>
+        <button class="mode-btn" data-mode="crypto" role="tab">🪙 Crypto</button>
+      </div>
+      <button class="icon-btn" id="lockBtn" title="Lock dashboard" aria-label="Lock">🔒</button>
+      <button class="icon-btn" id="bellBtn" title="Notifications" aria-label="Notifications">
+        <span>🔔</span>
+        <span class="bell-badge" id="bellBadge">0</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ---------- MAIN GRID ---------- -->
+  <main class="main-grid">
+
+    <!-- LEFT: FORMS -->
+    <section class="panel">
+
+      <!-- FIAT -->
+      <form id="fiatForm" novalidate autocomplete="off">
+        <div class="panel-head">
+          <div class="panel-title">🏦 Bank Wire Transfer</div>
+          <div class="panel-sub">Send pretend money from one bank account to another.</div>
+        </div>
+
+        <div class="prefill-note">💡 Fields are pre-filled with valid examples — just press <b>Send Transfer</b>.</div>
+
+        <div class="field">
+          <span class="field-label">Amount</span>
+          <div class="row">
+            <input id="fiatAmount" class="input" placeholder="250.00" inputmode="decimal">
+            <select id="fiatCurrency" class="select">
+              <option value="USD">USD $</option>
+              <option value="EUR">EUR €</option>
+              <option value="GBP">GBP £</option>
+              <option value="JPY">JPY ¥</option>
+              <option value="CHF">CHF</option>
+            </select>
+          </div>
+          <small class="hint" data-hint="fiatAmount">How much money do you want to send?</small>
+        </div>
+
+        <div class="field">
+          <span class="field-label">Account Holder Name</span>
+          <input id="fiatHolder" class="input" placeholder="Jane Doe" autocomplete="off">
+          <small class="hint" data-hint="fiatHolder">The name registered on the receiving account.</small>
+        </div>
+
+        <div class="field">
+          <div class="label-row">
+            <span class="field-label">Recipient IBAN</span>
+            <button type="button" class="example-btn" data-example="iban">example</button>
+          </div>
+          <input id="fiatIban" class="input mono" placeholder="DE89 3704 0044 0532 0130 00" spellcheck="false">
+          <small class="hint" data-hint="fiatIban">IBAN = the account's international address.</small>
+        </div>
+
+        <div class="field">
+          <div class="label-row">
+            <span class="field-label">Bank BIC / SWIFT</span>
+            <button type="button" class="example-btn" data-example="bic">example</button>
+          </div>
+          <input id="fiatBic" class="input mono" placeholder="NORDDEFFXXX" spellcheck="false">
+          <small class="hint" data-hint="fiatBic">BIC = your bank's international ID (8 or 11 characters).</small>
+        </div>
+
+        <div class="field">
+          <span class="field-label">How fast?</span>
+          <div class="speed-row" id="fiatSpeedRow">
+            <label class="speed-card selected" data-value="instant">
+              <input type="radio" name="fiatSpeed" value="instant" checked>
+              <span class="sc-title">⚡ Instant</span>
+              <span class="sc-sub">Seconds · tiny extra fee</span>
+            </label>
+            <label class="speed-card" data-value="standard">
+              <input type="radio" name="fiatSpeed" value="standard">
+              <span class="sc-title">🐢 Standard</span>
+              <span class="sc-sub">2–3 days · usually free</span>
+            </label>
+          </div>
+        </div>
+
+        <button class="btn-submit" type="submit" id="fiatBtn">Send Transfer →</button>
+        <p class="disclaimer">IBANs, bank, money.</p>
+      </form>
+
+      <!-- CRYPTO -->
+      <form id="cryptoForm" class="hidden" novalidate autocomplete="off">
+        <div class="panel-head">
+          <div class="panel-title">🪙 Crypto Transfer</div>
+          <div class="panel-sub">Send  coins straight to a wallet — no bank in the middle.</div>
+        </div>
+
+        <div class="prefill-note">💡 Fields are pre-filled with valid examples — just press <b>Send Transfer</b>.</div>
+
+        <div class="field">
+          <span class="field-label">Amount</span>
+          <div class="row">
+            <input id="cryptoAmount" class="input" placeholder="0.0150" inputmode="decimal">
+            <select id="cryptoCurrency" class="select">
+              <option value="BTC">BTC</option>
+              <option value="ETH">ETH</option>
+              <option value="USDT">USDT</option>
+              <option value="SOL">SOL</option>
+              <option value="DOGE">DOGE</option>
+            </select>
+          </div>
+          <small class="hint" data-hint="cryptoAmount">How many  coins do you want to send?</small>
+        </div>
+
+        <div class="field">
+          <span class="field-label">Recipient Label (optional)</span>
+          <input id="cryptoHolder" class="input" placeholder="Alice's Wallet" autocomplete="off">
+          <small class="hint" data-hint="cryptoHolder">Wallets don't have names — this is just a nickname for you.</small>
+        </div>
+
+        <div class="field">
+          <div class="label-row">
+            <span class="field-label">Wallet Public Address</span>
+            <button type="button" class="example-btn" data-example="addr">example</button>
+          </div>
+          <input id="cryptoAddr" class="input mono" placeholder="bc1q..." spellcheck="false">
+          <small class="hint" data-hint="cryptoAddr">A wallet address is like an account number — but with no name attached.</small>
+        </div>
+
+        <div class="field">
+          <span class="field-label">Network</span>
+          <input id="cryptoNetwork" class="input mono" value="Bitcoin" readonly
+                 style="background:var(--purple-dim);border-color:var(--purple);color:var(--purple);cursor:default;font-weight:600">
+        </div>
+
+        <div class="field">
+          <span class="field-label">How fast?</span>
+          <div class="speed-row" id="cryptoSpeedRow">
+            <label class="speed-card crypto-sel selected" data-value="instant">
+              <input type="radio" name="cryptoSpeed" value="instant" checked>
+              <span class="sc-title">⚡ Priority</span>
+              <span class="sc-sub">Next block · higher fee</span>
+            </label>
+            <label class="speed-card crypto-sel" data-value="standard">
+              <input type="radio" name="cryptoSpeed" value="standard">
+              <span class="sc-title">🐢 Economy</span>
+              <span class="sc-sub">2–3 days · lower fee</span>
+            </label>
+          </div>
+        </div>
+
+        <button class="btn-submit crypto" type="submit" id="cryptoBtn">Send Transfer →</button>
+        <p class="disclaimer">addresses, blockchain, coins.</p>
+      </form>
+    </section>
+
+    <!-- RIGHT: VISUALISER -->
+    <section class="panel">
+      <div class="viz-head">
+        <div>
+          <div class="panel-title" id="vizTitle">Bank Transfer Journey</div>
+          <div class="panel-sub" id="vizSub">Press Send and watch each step happen live.</div>
+        </div>
+        <button class="reset-btn" id="resetBtn">Reset view</button>
+      </div>
+
+      <div class="stepper" id="stepper"></div>
+      <div class="step-list" id="stepList"></div>
+      <div id="receiptSlot"></div>
+
+      <div class="log-wrap">
+        <div class="log-head">Live Ledger Log</div>
+        <div class="log" id="log"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- HISTORY -->
+  <section class="panel history-panel">
+    <div class="panel-head">
+      <div class="panel-title">📜 Transfer History</div>
+      <div class="panel-sub">Every transfer from this session appears here.</div>
+    </div>
+    <div class="history-list" id="historyList">
+      <div class="empty-history">No transfers yet — press Send to create one.</div>
+    </div>
+  </section>
+
+  <!-- NOTIFICATIONS -->
+  <div class="notif-backdrop hidden" id="notifBackdrop"></div>
+  <aside class="notif-panel hidden" id="notifPanel">
+    <div class="notif-head">
+      <div class="panel-title">🔔 Notifications</div>
+      <button class="close-btn" id="closeNotifBtn" aria-label="Close">×</button>
+    </div>
+    <div class="notif-list" id="notifList">
+      <div class="notif-empty">No notifications yet.</div>
+    </div>
+  </aside>
+
+  <div class="toast-container" id="toasts"></div>
+
+</div><!-- /appRoot -->
+
+<script>
+(function(){
+  'use strict';
+
+  /* =========================================================
+     SECURITY — ACCESS KEY
+     ========================================================= */
+  var ACCESS_KEY = 'f2de01de093ba7cc93bdf5e3d8a130d0733461f06393979a08c7b0126daefbb5';
+
+  function normalizeKey(v){
+    return String(v || '').replace(/\s+/g, '').toLowerCase();
+  }
+
+  /* =========================================================
+     HELPERS
+     ========================================================= */
+  var $ = function(s){ return document.querySelector(s); };
+  var $$ = function(s){ return Array.prototype.slice.call(document.querySelectorAll(s)); };
+
+  function rnd(set, n){
+    var out = '';
+    for(var i = 0; i < n; i++) out += set.charAt(Math.floor(Math.random()*set.length));
+    return out;
+  }
+  var HEX = '0123456789abcdef';
+  var B58 = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+  var B32 = 'qpzry9x8gf2tvdw0s3jn54khce6mua7l';
+
+  function fmtAmount(n){
+    return Number(n).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:6});
+  }
+  function maskIban(v){
+    var s = v.replace(/\s+/g, '');
+    return s.slice(0, 4) + ' •••• •••• ' + s.slice(-4);
+  }
+  function maskAddr(v){
+    return v.slice(0, 7) + '…' + v.slice(-5);
+  }
+  function refCode(){
+    return 'ML-' + Math.random().toString(36).slice(2, 7).toUpperCase() + '-' +
+           Math.floor(Math.random()*9000 + 1000);
+  }
+
+  /* =========================================================
+     DATA
+     ========================================================= */
+  var STEPS = {
+    fiat: [
+      { icon:'🏦', short:'Bank',    title:'Your bank checks your balance',
+        kid:'Your bank opens its notebook (the ledger) and makes sure you really have this money. If you do, it freezes the amount so you cannot spend it twice.',
+        log:'Checking available balance and freezing funds…' },
+      { icon:'✉️', short:'Message', title:'A SWIFT message is written',
+        kid:'Your bank writes a secure message: “Move X money to IBAN … at bank BIC …”. The IBAN says WHICH account. The BIC says WHICH bank.',
+        log:'Building SWIFT message with IBAN + BIC…' },
+      { icon:'🌐', short:'Network', title:'The message travels the world',
+        kid:'That message hops from bank to bank through a worldwide network called SWIFT. It travels at internet speed — but the MONEY does not move until banks update their notebooks.',
+        log:'Routing message through the SWIFT network…' },
+      { icon:'🔍', short:'Check',   title:'The receiving bank checks everything',
+        kid:'The other bank looks at the IBAN and the BIC. Do they exist? Do they match? Is the name right? This checking is what makes slow transfers take 2–3 days.',
+        log:'Recipient bank validating IBAN / BIC / account owner…' },
+      { icon:'✅', short:'Done',    title:'Money lands in the account!',
+        kid:'Both banks update their notebooks so the numbers match again. The money is now in your friend’s account. That is a wire transfer!',
+        log:'Ledgers updated on both sides. Transfer settled.' }
+    ],
+    crypto: [
+      { icon:'🔑', short:'Sign',   title:'Your wallet signs the transaction',
+        kid:'You have a secret key that  you know. Your wallet uses it to sign the transaction — like a signature that no computer on Earth can fake.',
+        log:'Signing transaction with your private key…' },
+      { icon:'📡', short:'Send',   title:'It is broadcast to thousands of computers',
+        kid:'Your wallet shouts the transaction to the whole network. It sits in a waiting room called the mempool, together with lots of other transactions.',
+        log:'Broadcasting transaction to network peers…' },
+      { icon:'⚙️', short:'Verify', title:'Computers check that it is honest',
+        kid:'Thousands of computers (validators) check: does this person really own these coins? Did they already send them somewhere else? No cheating allowed.',
+        log:'Nodes validating signature, balance and history…' },
+      { icon:'🧱', short:'Block',  title:'It gets packed into a block',
+        kid:'Your transaction is bundled into a block — like a page in a public notebook. Every new block chains onto the last one, and nobody can secretly rewrite old pages.',
+        log:'Transaction included in a new block…' },
+      { icon:'✅', short:'Done',   title:'The coins are in the wallet!',
+        kid:'More blocks stack on top (those are confirmations). The coins are now in your friend’s wallet — and no bank was needed at all.',
+        log:'Confirmations reached. Wallet balance updated.' }
+    ]
+  };
+
+  var ADDR_RULES = {
+    BTC:  { net:'Bitcoin',           re:/^(bc1[a-z0-9]{25,62}|[13][a-km-zA-HJ-NP-Z1-9]{25,34})$/,
+            ph:'bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq',
+            hint:'Bitcoin addresses start with 1, 3 or bc1.' },
+    ETH:  { net:'Ethereum',          re:/^0x[a-fA-F0-9]{40}$/,
+            ph:'0x71C7656EC7ab88b098defB751B7401B5f6d8976F',
+            hint:'Ethereum addresses start with 0x and have 40 hex characters.' },
+    USDT: { net:'Ethereum (ERC-20)', re:/^0x[a-fA-F0-9]{40}$/,
+            ph:'0x71C7656EC7ab88b098defB751B7401B5f6d8976F',
+            hint:'USDT on Ethereum uses a 0x… address with 40 hex characters.' },
+    SOL:  { net:'Solana',            re:/^[1-9A-HJ-NP-Za-km-z]{32,44}$/,
+            ph:'7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU',
+            hint:'Solana addresses are 32–44 base58 characters.' },
+    DOGE: { net:'Dogecoin',          re:/^D[1-9A-HJ-NP-Za-km-z]{33}$/,
+            ph:'DH5yaieqoZN36fDVciNyRueRGvGLR3mr7L',
+            hint:'Dogecoin addresses start with D and have 34 characters.' }
+  };
+
+  /* =========================================================
+     STATE
+     ========================================================= */
+  var mode = 'fiat';
+  var busy = false;
+  var cancelSim = null;
+  var notifications = [];
+  var history = [];
+
+  /* =========================================================
+     LOG
+     ========================================================= */
+  function addLog(msg, cls){
+    var box = $('#log');
+    if(!box) return;
+    var now = new Date().toLocaleTimeString('en-GB', {hour12:false});
+    var p = document.createElement('p');
+    p.innerHTML = '<span class="t">' + now + '</span>' +
+                  '<span class="' + (cls || '') + '">' + msg + '</span>';
+    box.appendChild(p);
+    box.scrollTop = box.scrollHeight;
+    while(box.children.length > 150) box.removeChild(box.firstChild);
+  }
+
+  /* =========================================================
+     TOASTS
+     ========================================================= */
+  function toast(type, title, msg){
+    var icons = { info:'ℹ️', warn:'⏳', good:'✅', bad:'⚠️' };
+    var el = document.createElement('div');
+    el.className = 'toast ' + type;
+    el.innerHTML = '<span class="t-ico">' + (icons[type] || 'ℹ️') + '</span>' +
+                   '<div><b>' + title + '</b><p>' + msg + '</p></div>';
+    $('#toasts').appendChild(el);
+    setTimeout(function(){
+      el.classList.add('out');
+      setTimeout(function(){ el.remove(); }, 320);
+    }, 4500);
+  }
+
+  /* =========================================================
+     NOTIFICATIONS
+     ========================================================= */
+  function addNotification(type, title, body){
+    notifications.unshift({
+      id: Date.now() + Math.random(),
+      type: type, title: title, body: body,
+      time: new Date(), read: false
+    });
+    renderNotifications();
+    updateBellBadge();
+  }
+
+  function renderNotifications(){
+    var list = $('#notifList');
+    if(!list) return;
+    if(notifications.length === 0){
+      list.innerHTML = '<div class="notif-empty">No notifications yet.</div>';
+      return;
+    }
+    var html = '';
+    for(var i = 0; i < notifications.length; i++){
+      var n = notifications[i];
+      var icon = n.type === 'good' ? '✅' : n.type === 'warn' ? '⏳' : n.type === 'bad' ? '⚠️' : 'ℹ️';
+      html += '<div class="notif-item ' + n.type + (n.read ? '' : ' unread') + '">' +
+                '<div class="notif-icon">' + icon + '</div>' +
+                '<div class="notif-body">' +
+                  '<div class="notif-title">' + n.title + '</div>' +
+                  '<div class="notif-text">' + n.body + '</div>' +
+                  '<div class="notif-time">' + n.time.toLocaleTimeString() + '</div>' +
+                '</div>' +
+              '</div>';
+    }
+    list.innerHTML = html;
+  }
+
+  function updateBellBadge(){
+    var unread = 0;
+    for(var i = 0; i < notifications.length; i++){
+      if(!notifications[i].read) unread++;
+    }
+    var badge = $('#bellBadge');
+    if(!badge) return;
+    if(unread > 0){
+      badge.textContent = unread > 9 ? '9+' : String(unread);
+      badge.classList.add('show');
+    } else {
+      badge.classList.remove('show');
+    }
+  }
+
+  function markAllRead(){
+    for(var i = 0; i < notifications.length; i++) notifications[i].read = true;
+    renderNotifications();
+    updateBellBadge();
+  }
+
+  /* =========================================================
+     HISTORY
+     ========================================================= */
+  function addHistory(entry){
+    history.unshift(entry);
+    renderHistory();
+    return entry;
+  }
+
+  function renderHistory(){
+    var list = $('#historyList');
+    if(!list) return;
+    if(history.length === 0){
+      list.innerHTML = '<div class="empty-history">No transfers yet — press Send to create one.</div>';
+      return;
+    }
+    var html = '';
+    for(var i = 0; i < history.length; i++){
+      var h = history[i];
+      var cls = h.type === 'crypto' ? 'history-item crypto' : 'history-item';
+      var icon = h.type === 'crypto' ? '🪙' : '🏦';
+      html += '<div class="' + cls + '">' +
+                '<div class="history-icon">' + icon + '</div>' +
+                '<div class="history-body">' +
+                  '<div class="history-title">' + h.title + '</div>' +
+                  '<div class="history-detail">' + h.detail + '</div>' +
+                  '<div class="history-meta">' +
+                    '<span class="history-ref">' + h.ref + '</span>' +
+                    '<span class="history-time">' + h.time.toLocaleTimeString() + '</span>' +
+                    '<span class="history-status ' + h.status + '">' + h.statusLabel + '</span>' +
+                  '</div>' +
+                '</div>' +
+              '</div>';
+    }
+    list.innerHTML = html;
+  }
+
+  /* =========================================================
+     HINTS
+     ========================================================= */
+  function setHint(key, state, msg){
+    var el = document.querySelector('[data-hint="' + key + '"]');
+    if(!el) return;
+    el.className = 'hint' + (state ? ' ' + state : '');
+    el.textContent = msg || '';
+  }
+
+  /* =========================================================
+     VALIDATION
+     ========================================================= */
+  function validIban(v){
+    var s = v.replace(/[\s-]/g, '').toUpperCase();
+    if(!/^[A-Z]{2}[0-9]{2}[A-Z0-9]+$/.test(s)) return false;
+    return s.length >= 15 && s.length <= 34;
+  }
+  function validBic(v){
+    var s = v.replace(/\s/g, '').toUpperCase();
+    return /^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$/.test(s);
+  }
+
+  function checkFiatField(which){
+    if(which === 'amount'){
+      var raw = $('#fiatAmount').value.replace(/,/g, '').trim();
+      var v = parseFloat(raw);
+      if(raw === '') setHint('fiatAmount', '', 'How much  money do you want to send?');
+      else if(isNaN(v) || v <= 0) setHint('fiatAmount', 'err', 'Please type an amount bigger than 0.');
+      else if(v > 1000000) setHint('fiatAmount', 'err', 'Keep it under 1,000,000');
+      else setHint('fiatAmount', 'ok', 'Looks good — ' + fmtAmount(v) + ' ' + $('#fiatCurrency').value);
+    }
+    if(which === 'holder'){
+      var h = $('#fiatHolder').value.trim();
+      if(!h) setHint('fiatHolder', '', 'The name registered on the receiving account.');
+      else if(h.length < 2) setHint('fiatHolder', 'err', 'Please type at least 2 characters.');
+      else if(!/^[A-Za-zÀ-ÿ' .-]+$/.test(h)) setHint('fiatHolder', 'err', 'Use letters and spaces .');
+      else setHint('fiatHolder', 'ok', 'Name looks good ✓');
+    }
+    if(which === 'iban'){
+      var rawI = $('#fiatIban').value;
+      if(!rawI.trim()) setHint('fiatIban', '', "IBAN = the account's international address.");
+      else if(validIban(rawI)) setHint('fiatIban', 'ok', 'IBAN format looks correct ✓');
+      else setHint('fiatIban', 'err', 'Wrong format. Example: DE89 3704 0044 0532 0130 00');
+    }
+    if(which === 'bic'){
+      var rawB = $('#fiatBic').value;
+      if(!rawB.trim()) setHint('fiatBic', '', "BIC = your bank's international ID (8 or 11 characters).");
+      else if(validBic(rawB)) setHint('fiatBic', 'ok', 'BIC format looks correct ✓');
+      else setHint('fiatBic', 'err', 'Wrong format. Example: NORDDEFFXXX');
+    }
+  }
+
+  function checkCryptoField(which){
+    var cur = $('#cryptoCurrency').value;
+    var rule = ADDR_RULES[cur];
+
+    if(which === 'amount'){
+      var raw = $('#cryptoAmount').value.replace(/,/g, '').trim();
+      var v = parseFloat(raw);
+      if(raw === '') setHint('cryptoAmount', '', 'How many  coins do you want to send?');
+      else if(isNaN(v) || v <= 0) setHint('cryptoAmount', 'err', 'Please type an amount bigger than 0.');
+      else setHint('cryptoAmount', 'ok', 'Looks good — ' + fmtAmount(v) + ' ' + cur);
+    }
+    if(which === 'addr'){
+      var rawA = $('#cryptoAddr').value.trim();
+      if(!rawA) setHint('cryptoAddr', '', rule.hint);
+      else if(rule.re.test(rawA)) setHint('cryptoAddr', 'ok', 'Address format looks correct for ' + rule.net + ' ✓');
+      else setHint('cryptoAddr', 'err', 'Not a valid ' + rule.net + ' address. ' + rule.hint);
+    }
+  }
+
+  /* =========================================================
+     EXAMPLE GENERATORS
+     ========================================================= */
+  function exampleIban(){
+    var countries = [['DE', 22], ['FR', 27], ['GB', 22], ['NL', 18], ['ES', 24], ['IT', 27]];
+    var pick = countries[Math.floor(Math.random() * countries.length)];
+    var cc = pick[0], len = pick[1];
+    var digits = String(Math.floor(Math.random() * 90) + 10);
+    var rest = rnd('0123456789', len - 4);
+    var raw = cc + digits + rest;
+    return raw.replace(/(.{4})/g, '$1 ').trim();
+  }
+  function exampleBic(){
+    var banks = ['NORDDEFF', 'BNPAFRPP', 'DEUTDEFF', 'CHASUS33', 'BARCGB22', 'INGBNL2A'];
+    var base = banks[Math.floor(Math.random() * banks.length)];
+    return Math.random() > 0.5 ? base + 'XXX' : base;
+  }
+  function exampleAddr(cur){
+    switch(cur){
+      case 'BTC':  return 'bc1q' + rnd(B32, 38);
+      case 'ETH':
+      case 'USDT': return '0x' + rnd(HEX, 40);
+      case 'SOL':  return rnd(B58, 44);
+      case 'DOGE': return 'D' + rnd(B58, 33);
+    }
+    return '';
+  }
+
+  /* =========================================================
+     RENDER JOURNEY
+     ========================================================= */
+  function renderJourney(m){
+    var steps = STEPS[m];
+
+    var stepper = $('#stepper');
+    var stepperHtml = '<div class="rail">' +
+                        '<div class="rail-fill" id="railFill"></div>' +
+                        '<div class="rail-dot" id="railDot"></div>' +
+                      '</div>';
+    for(var i = 0; i < steps.length; i++){
+      stepperHtml += '<div class="step-node" data-i="' + i + '">' +
+                       '<div class="node-box">' + steps[i].icon + '</div>' +
+                       '<div class="node-label">' + steps[i].short + '</div>' +
+                     '</div>';
+    }
+    stepper.innerHTML = stepperHtml;
+
+    var listHtml = '';
+    for(var j = 0; j < steps.length; j++){
+      listHtml += '<div class="step-item" data-i="' + j + '">' +
+                    '<div class="si-icon">' + steps[j].icon + '</div>' +
+                    '<div class="si-body">' +
+                      '<div class="si-title">' + steps[j].title + '</div>' +
+                      '<div class="si-kid">' + steps[j].kid + '</div>' +
+                    '</div>' +
+                    '<div class="si-status" data-status>waiting</div>' +
+                  '</div>';
+    }
+    $('#stepList').innerHTML = listHtml;
+
+    $('#vizTitle').textContent = m === 'fiat' ? 'Bank Transfer Journey' : 'Crypto Transfer Journey';
+    $('#vizSub').textContent = m === 'fiat'
+      ? 'Banks move money by sending secure messages and updating their ledgers.'
+      : 'Crypto moves coins by broadcasting a signed transaction to the network.';
+  }
+
+  function setStage(i, state){
+    var steps = STEPS[mode];
+    var n = steps.length;
+
+    var node = document.querySelector('.step-node[data-i="' + i + '"]');
+    var item = document.querySelector('.step-item[data-i="' + i + '"]');
+
+    if(node){
+      node.classList.remove('active', 'done');
+      if(state) node.classList.add(state);
+    }
+    if(item){
+      item.classList.remove('active', 'done');
+      if(state) item.classList.add(state);
+      var st = item.querySelector('[data-status]');
+      if(st){
+        st.textContent = state === 'active' ? 'working…'
+                       : state === 'done'   ? 'done ✓'
+                       :                      'waiting';
+      }
+    }
+
+    var pct;
+    if(state === 'done'){
+      pct = Math.min((i + 1) / (n - 1) * 100, 100);
+    } else {
+      pct = i / (n - 1) * 100;
+    }
+    var fill = document.getElementById('railFill');
+    if(fill) fill.style.width = pct + '%';
+    var dot = document.getElementById('railDot');
+    if(dot){
+      dot.classList.add('show');
+      dot.style.left = pct + '%';
+    }
+  }
+
+  function clearViz(){
+    $('#receiptSlot').innerHTML = '';
+    $('#log').innerHTML = '';
+  }
+
+  /* =========================================================
+     SPEED CARD INTERACTION
+     ========================================================= */
+  function wireSpeedRow(rowId){
+    var row = document.getElementById(rowId);
+    if(!row) return;
+    var cards = row.querySelectorAll('.speed-card');
+    for(var i = 0; i < cards.length; i++){
+      (function(card){
+        card.addEventListener('click', function(e){
+          e.preventDefault();
+          for(var j = 0; j < cards.length; j++) cards[j].classList.remove('selected');
+          card.classList.add('selected');
+          var inp = card.querySelector('input[type="radio"]');
+          if(inp) inp.checked = true;
+        });
+      })(cards[i]);
+    }
+  }
+
+  function getSpeed(rowId){
+    var row = document.getElementById(rowId);
+    if(!row) return 'instant';
+    var checked = row.querySelector('input[type="radio"]:checked');
+    return checked ? checked.value : 'instant';
+  }
+
+  /* =========================================================
+     SUBMIT — FIAT
+     ========================================================= */
+  function submitFiat(e){
+    if(e) e.preventDefault();
+    if(busy) return;
+
+    var amountRaw = $('#fiatAmount').value.replace(/,/g, '').trim();
+    var amount = parseFloat(amountRaw);
+    var holder = $('#fiatHolder').value.trim();
+    var iban = $('#fiatIban').value.replace(/[\s-]/g, '').toUpperCase();
+    var bic = $('#fiatBic').value.replace(/\s/g, '').toUpperCase();
+    var cur = $('#fiatCurrency').value;
+    var speed = getSpeed('fiatSpeedRow');
+
+    var ok = true;
+    if(isNaN(amount) || amount <= 0 || amount > 1000000){
+      setHint('fiatAmount', 'err', 'Please type an amount between 0 and 1,000,000.');
+      ok = false;
+    }
+    if(!holder || holder.length < 2 || !/^[A-Za-zÀ-ÿ' .-]+$/.test(holder)){
+      setHint('fiatHolder', 'err', 'Please type a valid account holder name.');
+      ok = false;
+    }
+    if(!validIban(iban)){
+      setHint('fiatIban', 'err', 'Wrong IBAN format. Try the “example” button.');
+      ok = false;
+    }
+    if(!validBic(bic)){
+      setHint('fiatBic', 'err', 'Wrong BIC format. Try the “example” button.');
+      ok = false;
+    }
+    if(!ok){
+      toast('bad', 'Check the form', 'Some details are missing or in the wrong format.');
+      return;
+    }
+
+    start('fiat', {
+      amount: amount, holder: holder, iban: iban, bic: bic,
+      currency: cur, speed: speed
+    });
+  }
+
+  /* =========================================================
+     SUBMIT — CRYPTO
+     ========================================================= */
+  function submitCrypto(e){
+    if(e) e.preventDefault();
+    if(busy) return;
+
+    var amountRaw = $('#cryptoAmount').value.replace(/,/g, '').trim();
+    var amount = parseFloat(amountRaw);
+    var cur = $('#cryptoCurrency').value;
+    var addr = $('#cryptoAddr').value.trim();
+    var label = $('#cryptoHolder').value.trim();
+    var speed = getSpeed('cryptoSpeedRow');
+    var rule = ADDR_RULES[cur];
+
+    var ok = true;
+    if(isNaN(amount) || amount <= 0){
+      setHint('cryptoAmount', 'err', 'Please type an amount bigger than 0.');
+      ok = false;
+    }
+    if(!rule.re.test(addr)){
+      setHint('cryptoAddr', 'err', 'Wrong address format for ' + rule.net + '. Try the “example” button.');
+      ok = false;
+    }
+    if(!ok){
+      toast('bad', 'Check the form', 'Some details are missing or in the wrong format.');
+      return;
+    }
+
+    start('crypto', {
+      amount: amount, cur: cur, addr: addr, label: label, speed: speed
+    });
+  }
+
+  /* =========================================================
+     SIMULATION ENGINE
+     ========================================================= */
+  function start(m, data){
+    busy = true;
+    setButtonsDisabled(true);
+
+    var instant = data.speed === 'instant';
+    var dur = instant ? 850 : 1400;
+    var steps = STEPS[m];
+    var stepIndex = 0;
+    var cancelled = false;
+
+    cancelSim = function(){ cancelled = true; };
+
+    clearViz();
+    renderJourney(m);
+
+    /* ---------- INITIAL LOG + NOTIFICATION + HISTORY ---------- */
+    var entry;
+    if(m === 'fiat'){
+      addLog('▶ New bank transfer initiated', 'c-blue');
+      addLog('From ' + data.holder + ' · Amount ' + fmtAmount(data.amount) + ' ' + data.currency +
+             ' · ' + (instant ? 'INSTANT' : 'STANDARD (2–3 days)'));
+      addLog('IBAN ' + maskIban(data.iban) + ' · BIC ' + data.bic);
+      toast('info', 'Transfer started', 'Your bank is checking everything now.');
+      addNotification('info', 'Bank transfer started',
+        fmtAmount(data.amount) + ' ' + data.currency + ' to ' + data.holder);
+
+      entry = addHistory({
+        type: 'fiat',
+        title: 'Bank transfer · ' + fmtAmount(data.amount) + ' ' + data.currency,
+        detail: 'To ' + data.holder + ' · IBAN ' + maskIban(data.iban) + ' · ' + (instant ? 'Instant' : 'Standard'),
+        ref: refCode(),
+        time: new Date(),
+        status: 'pending',
+        statusLabel: 'Pending'
+      });
+    } else {
+      var rule = ADDR_RULES[data.cur];
+      addLog('▶ New crypto transfer initiated', 'c-purple');
+      addLog('Amount ' + fmtAmount(data.amount) + ' ' + data.cur + ' on ' + rule.net +
+             ' · ' + (instant ? 'PRIORITY' : 'ECONOMY'));
+      addLog('To wallet ' + maskAddr(data.addr) + (data.label ? ' (' + data.label + ')' : ''));
+      toast('info', 'Transaction created', 'Your wallet is signing it with your secret key.');
+      addNotification('info', 'Crypto transaction created',
+        fmtAmount(data.amount) + ' ' + data.cur + ' to ' + (data.label || maskAddr(data.addr)));
+
+      entry = addHistory({
+        type: 'crypto',
+        title: 'Crypto transfer · ' + fmtAmount(data.amount) + ' ' + data.cur,
+        detail: 'To ' + (data.label || 'wallet') + ' · ' + maskAddr(data.addr) + ' · ' + (instant ? 'Priority' : 'Economy'),
+        ref: refCode(),
+        time: new Date(),
+        status: 'pending',
+        statusLabel: 'Pending'
+      });
+    }
+
+    /* ---------- STEP ENGINE ---------- */
+    function tick(){
+      if(cancelled) return;
+      if(stepIndex >= steps.length){
+        finish();
+        return;
+      }
+
+      setStage(stepIndex, 'active');
+      addLog(steps[stepIndex].log);
+
+      if(m === 'fiat'){
+        if(!instant && stepIndex === 2){
+          addLog('⏳ Standard speed: banks batch transfers, so this part takes 2–3 days.', 'c-amber');
+          toast('warn', 'This part is slow',
+            'Standard transfers wait for banks to process them in batches — that is why it takes 2–3 days.');
+          addNotification('warn', 'Standard speed',
+            'This transfer will take 2–3 days because banks process them in batches.');
+        }
+        if(instant && stepIndex === 1){
+          addLog('⚡ Instant speed: the banks use a fast lane, so the message arrives in seconds.', 'c-green');
+        }
+      } else {
+        if(!instant && stepIndex === 1){
+          addLog('⏳ Economy fee: your transaction waits in the mempool until a block has space.', 'c-amber');
+          toast('warn', 'Waiting in the mempool',
+            'Cheaper fees mean your transaction waits longer for a free spot in a block.');
+          addNotification('warn', 'Mempool wait',
+            'Economy fee means your transaction waits for block space.');
+        }
+        if(stepIndex === 3){
+          addLog(instant
+            ? '🧱 Block found quickly — priority fee paid off.'
+            : '🧱 A block finally included your transaction.',
+            instant ? 'c-green' : 'c-amber');
+        }
+      }
+
+      setTimeout(function(){
+        if(cancelled) return;
+        setStage(stepIndex, 'done');
+        stepIndex++;
+        tick();
+      }, dur);
+    }
+
+    function finish(){
+      if(cancelled) return;
+
+      if(m === 'fiat'){
+        addLog('✅ Transfer settled successfully.', 'c-green');
+        toast('good', 'Money arrived! 🎉',
+          fmtAmount(data.amount) + ' ' + data.currency + ' reached ' + data.holder + '’s account.');
+        addNotification('good', 'Money arrived 🎉',
+          fmtAmount(data.amount) + ' ' + data.currency + ' reached ' + data.holder + '’s account.');
+
+        entry.status = 'completed';
+        entry.statusLabel = 'Completed';
+        renderHistory();
+
+        $('#receiptSlot').innerHTML =
+          '<div class="receipt">' +
+            '<div class="receipt-head">✅ Transfer Complete</div>' +
+            '<div class="receipt-grid">' +
+              '<div><div class="ri-label">Amount sent</div><div class="ri-value">' + fmtAmount(data.amount) + ' ' + data.currency + '</div></div>' +
+              '<div><div class="ri-label">Account holder</div><div class="ri-value">' + data.holder + '</div></div>' +
+              '<div><div class="ri-label">Speed</div><div class="ri-value">' + (instant ? '⚡ Instant' : '🐢 Standard (2–3 days)') + '</div></div>' +
+              '<div><div class="ri-label">To IBAN</div><div class="ri-value">' + maskIban(data.iban) + '</div></div>' +
+              '<div><div class="ri-label">Bank BIC</div><div class="ri-value">' + data.bic + '</div></div>' +
+              '<div><div class="ri-label">Status</div><div class="ri-value green">SETTLED</div></div>' +
+            '</div>' +
+            '<div class="kid-explain">' +
+              '<b>🎓 What just happened?</b><br>' +
+              'Your bank did not mail a bag of cash. It sent a <b>secure message</b> saying ' +
+              '“move this much money from here to there”. Then both banks updated their ' +
+              '<b>notebooks (ledgers)</b> so the numbers match. That’s a bank transfer. ' +
+              'The <b>IBAN</b> told everyone <i>which account</i>, and the <b>BIC/SWIFT</b> ' +
+              'told everyone <i>which bank</i>.' +
+            '</div>' +
+          '</div>';
+      } else {
+        var rule2 = ADDR_RULES[data.cur];
+        addLog('✅ Transaction confirmed on-chain.', 'c-green');
+        toast('good', 'Coins arrived! 🎉',
+          fmtAmount(data.amount) + ' ' + data.cur + ' landed in the wallet ending ' + data.addr.slice(-5) + '.');
+        addNotification('good', 'Coins arrived 🎉',
+          fmtAmount(data.amount) + ' ' + data.cur + ' landed in ' + (data.label || maskAddr(data.addr)) + '.');
+
+        entry.status = 'completed';
+        entry.statusLabel = 'Completed';
+        renderHistory();
+
+        $('#receiptSlot').innerHTML =
+          '<div class="receipt">' +
+            '<div class="receipt-head">✅ Transaction Confirmed</div>' +
+            '<div class="receipt-grid">' +
+              '<div><div class="ri-label">Amount sent</div><div class="ri-value">' + fmtAmount(data.amount) + ' ' + data.cur + '</div></div>' +
+              '<div><div class="ri-label">Recipient</div><div class="ri-value">' + (data.label || '—') + '</div></div>' +
+              '<div><div class="ri-label">Network</div><div class="ri-value">' + rule2.net + '</div></div>' +
+              '<div><div class="ri-label">To wallet</div><div class="ri-value">' + maskAddr(data.addr) + '</div></div>' +
+              '<div><div class="ri-label">Speed</div><div class="ri-value">' + (instant ? '⚡ Priority' : '🐢 Economy') + '</div></div>' +
+              '<div><div class="ri-label">Status</div><div class="ri-value green">CONFIRMED</div></div>' +
+            '</div>' +
+            '<div class="kid-explain">' +
+              '<b>🎓 What just happened?</b><br>' +
+              'No bank was involved. Your wallet <b>signed</b> the transaction with your secret key. ' +
+              'Thousands of computers <b>checked</b> that it was honest, then wrote it into a ' +
+              '<b>public notebook (the blockchain)</b> that nobody can secretly change. ' +
+              'The <b>wallet address</b> worked like an account number — but it isn’t linked to a name, ' +
+              'which is why crypto is powerful… and also why you must be careful who you send to!' +
+            '</div>' +
+          '</div>';
+      }
+
+      busy = false;
+      cancelSim = null;
+      setButtonsDisabled(false);
+    }
+
+    tick();
+  }
+
+  /* =========================================================
+     BUTTON STATE
+     ========================================================= */
+  function setButtonsDisabled(b){
+    $('#fiatBtn').disabled = b;
+    $('#cryptoBtn').disabled = b;
+    $$('.mode-btn').forEach(function(btn){ btn.disabled = b; });
+    if(b){
+      $('#fiatBtn').textContent = 'Sending…';
+      $('#cryptoBtn').textContent = 'Sending…';
+    } else {
+      $('#fiatBtn').textContent = 'Send Transfer →';
+      $('#cryptoBtn').textContent = 'Send Transfer →';
+    }
+  }
+
+  /* =========================================================
+     RESET VIEW
+     ========================================================= */
+  function resetView(){
+    if(cancelSim) cancelSim();
+    cancelSim = null;
+    busy = false;
+    setButtonsDisabled(false);
+    clearViz();
+    renderJourney(mode);
+    addLog('✅ ready. Review the form and press "Send Transfer".', 'c-green');
+  }
+
+  /* =========================================================
+     MODE SWITCH
+     ========================================================= */
+  function switchMode(m){
+    if(busy) return;
+    mode = m;
+    $$('.mode-btn').forEach(function(b){
+      b.classList.toggle('active', b.dataset.mode === m);
+    });
+    $('#fiatForm').classList.toggle('hidden', m !== 'fiat');
+    $('#cryptoForm').classList.toggle('hidden', m !== 'crypto');
+    resetView();
+  }
+
+  /* =========================================================
+     NOTIFICATION PANEL
+     ========================================================= */
+  function openNotifPanel(){
+    $('#notifPanel').classList.remove('hidden');
+    $('#notifBackdrop').classList.remove('hidden');
+    markAllRead();
+  }
+  function closeNotifPanel(){
+    $('#notifPanel').classList.add('hidden');
+    $('#notifBackdrop').classList.add('hidden');
+  }
+
+  /* =========================================================
+     LOGIN / LOCK
+     ========================================================= */
+  function showLoginError(msg){
+    var el = $('#loginError');
+    el.textContent = msg;
+    el.classList.add('show');
+    $('#loginKey').classList.add('err');
+    setTimeout(function(){ el.classList.remove('show'); }, 500);
+    $('#loginKey').focus();
+    $('#loginKey').select();
+  }
+
+  function clearLoginError(){
+    var el = $('#loginError');
+    if(!el) return;
+    el.textContent = '';
+    el.classList.remove('show');
+    $('#loginKey').classList.remove('err');
+  }
+
+  function unlockApp(){
+    try { sessionStorage.setItem('moneylab_auth', '1'); } catch(_){}
+    $('#loginScreen').classList.add('hidden');
+    $('#appRoot').classList.remove('hidden');
+    $('#loginKey').value = '';
+    clearLoginError();
+    setTimeout(function(){
+      var log = $('#log');
+      if(log) log.scrollTop = log.scrollHeight;
+    }, 50);
+  }
+
+  function lockApp(){
+    try { sessionStorage.removeItem('moneylab_auth'); } catch(_){}
+    resetView();
+    closeNotifPanel();
+    var t = $('#toasts');
+    if(t) t.innerHTML = '';
+    $('#appRoot').classList.add('hidden');
+    $('#loginScreen').classList.remove('hidden');
+    $('#loginKey').value = '';
+    $('#loginKey').type = 'password';
+    clearLoginError();
+    setTimeout(function(){ $('#loginKey').focus(); }, 80);
+  }
+
+  /* =========================================================
+     INIT
+     ========================================================= */
+  function init(){
+    /* ---- login form ---- */
+    var loginForm = $('#loginForm');
+    if(loginForm){
+      loginForm.addEventListener('submit', function(e){
+        e.preventDefault();
+        var val = normalizeKey($('#loginKey').value);
+        if(val === ACCESS_KEY){
+          unlockApp();
+        } else {
+          showLoginError('Invalid access key. Please check it and try again.');
+        }
+      });
+    }
+
+    var toggleBtn = $('#toggleKeyBtn');
+    if(toggleBtn){
+      toggleBtn.addEventListener('click', function(){
+        var inp = $('#loginKey');
+        inp.type = inp.type === 'password' ? 'text' : 'password';
+        inp.focus();
+      });
+    }
+
+    var keyInput = $('#loginKey');
+    if(keyInput){
+      keyInput.addEventListener('input', clearLoginError);
+    }
+
+    var lockBtn = $('#lockBtn');
+    if(lockBtn){
+      lockBtn.addEventListener('click', lockApp);
+    }
+
+    /* ---- app controls ---- */
+    $$('.mode-btn').forEach(function(btn){
+      btn.addEventListener('click', function(){ switchMode(btn.dataset.mode); });
+    });
+
+    $('#resetBtn').addEventListener('click', resetView);
+    $('#bellBtn').addEventListener('click', openNotifPanel);
+    $('#closeNotifBtn').addEventListener('click', closeNotifPanel);
+    $('#notifBackdrop').addEventListener('click', closeNotifPanel);
+
+    wireSpeedRow('fiatSpeedRow');
+    wireSpeedRow('cryptoSpeedRow');
+
+    $('#fiatAmount').addEventListener('input', function(){ checkFiatField('amount'); });
+    $('#fiatHolder').addEventListener('input', function(){ checkFiatField('holder'); });
+    $('#fiatIban').addEventListener('input', function(){ checkFiatField('iban'); });
+    $('#fiatBic').addEventListener('input', function(){ checkFiatField('bic'); });
+    $('#fiatCurrency').addEventListener('change', function(){ checkFiatField('amount'); });
+
+    $('#cryptoAmount').addEventListener('input', function(){ checkCryptoField('amount'); });
+    $('#cryptoAddr').addEventListener('input', function(){ checkCryptoField('addr'); });
+
+    $('#cryptoCurrency').addEventListener('change', function(){
+      var cur = $('#cryptoCurrency').value;
+      var rule = ADDR_RULES[cur];
+      $('#cryptoNetwork').value = rule.net;
+      $('#cryptoAddr').placeholder = rule.ph;
+      $('#cryptoAddr').value = '';
+      setHint('cryptoAddr', '', rule.hint);
+      checkCryptoField('amount');
+    });
+
+    $$('[data-example]').forEach(function(b){
+      b.addEventListener('click', function(){
+        var kind = b.dataset.example;
+        if(kind === 'iban'){ $('#fiatIban').value = exampleIban(); checkFiatField('iban'); }
+        if(kind === 'bic'){  $('#fiatBic').value  = exampleBic();  checkFiatField('bic');  }
+        if(kind === 'addr'){ $('#cryptoAddr').value = exampleAddr($('#cryptoCurrency').value); checkCryptoField('addr'); }
+      });
+    });
+
+    $('#fiatForm').addEventListener('submit', submitFiat);
+    $('#cryptoForm').addEventListener('submit', submitCrypto);
+
+    /* ---- pre-filled examples ---- */
+    $('#fiatAmount').value = '250.00';
+    $('#fiatHolder').value = 'Jane Doe';
+    $('#fiatIban').value = 'DE89 3704 0044 0532 0130 00';
+    $('#fiatBic').value = 'NORDDEFFXXX';
+    checkFiatField('amount');
+    checkFiatField('holder');
+    checkFiatField('iban');
+    checkFiatField('bic');
+
+    $('#cryptoAmount').value = '0.015';
+    $('#cryptoHolder').value = "Alice's Wallet";
+    $('#cryptoNetwork').value = ADDR_RULES.BTC.net;
+    $('#cryptoAddr').placeholder = ADDR_RULES.BTC.ph;
+    $('#cryptoAddr').value = 'bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq';
+    checkCryptoField('amount');
+    checkCryptoField('addr');
+
+    /* ---- initial render ---- */
+    renderJourney('fiat');
+    renderHistory();
+    renderNotifications();
+    updateBellBadge();
+
+    addLog('✅ loaded. Fields are pre-filled with valid examples.', 'c-green');
+    addLog('Press "Send Transfer" to watch money move step by step.', 'c-blue');
+
+    /* ---- boot auth check ---- */
+    var authed = false;
+    try { authed = sessionStorage.getItem('moneylab_auth') === '1'; } catch(_){}
+    if(authed){
+      unlockApp();
+    } else {
+      setTimeout(function(){ $('#loginKey').focus(); }, 120);
+    }
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+  window.addEventListener('error', function(ev){
+    try {
+      toast('bad', 'Unexpected error', ev && ev.message ? ev.message : 'Something went wrong.');
+      addLog('⚠️ ' + (ev && ev.message ? ev.message : 'unknown error'), 'c-red');
+    } catch(_){}
+  });
+
+})();
+</script>
+</body>
+</html>
