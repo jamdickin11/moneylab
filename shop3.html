@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>MoneyLab — Interactive Financial Education Simulator | Learn Bank Wires & Crypto Transfers</title>
+<meta name="description" content="MoneyLab is the interactive simulator that teaches how bank wires and crypto transfers really work. Kid-friendly explanations, live ledger log, instant access for just $2. No real money involved.">
+<meta name="keywords" content="financial education, bank wire simulator, crypto transfer simulator, learn blockchain, SWIFT explained, IBAN explained, financial literacy for kids, money education tool, interactive finance course, crypto education">
+<meta name="author" content="MoneyLab">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<link rel="canonical" href="https://moneylab.example.com/">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MoneyLab">
+<meta property="og:title" content="MoneyLab — Learn How Money Really Moves">
+<meta property="og:description" content="Interactive simulator for bank wires and crypto transfers. Kid-friendly. 100% safe sandbox. Instant access for $2.">
+<meta property="og:url" content="https://moneylab.example.com/">
+<meta property="og:image" content="https://picsum.photos/seed/moneylab-og/1200/630">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="ru_RU">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="MoneyLab — Learn How Money Really Moves">
+<meta name="twitter:description" content="Interactive simulator for bank wires and crypto transfers. Kid-friendly. 100% safe sandbox. Instant access for $2.">
+<meta name="twitter:image" content="https://picsum.photos/seed/moneylab-og/1200/630">
+<meta name="theme-color" content="#070a10">
+
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%233b82f6'/%3E%3Ctext x='50' y='68' font-size='58' font-family='Arial' font-weight='bold' fill='white' text-anchor='middle'%3E%E2%97%88%3C/text%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://api.coingecko.com">
+<link rel="preconnect" href="https://picsum.photos">
+<link rel="dns-prefetch" href="https://api.etherscan.io">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {"@type":"Organization","@id":"https://moneylab.example.com/#organization","name":"MoneyLab","url":"https://moneylab.example.com/","description":"Interactive financial education simulator for bank wires and crypto transfers."},
+    {"@type":"WebSite","@id":"https://moneylab.example.com/#website","url":"https://moneylab.example.com/","name":"MoneyLab","publisher":{"@id":"https://moneylab.example.com/#organization"},"inLanguage":"en-US"},
+    {"@type":"Product","name":"MoneyLab Premium Access","description":"Interactive simulator teaching bank wires and crypto transfers.","brand":{"@id":"https://moneylab.example.com/#organization"},"image":"https://picsum.photos/seed/moneylab-product/1200/1200","offers":{"@type":"Offer","url":"https://moneylab.example.com/#pricing","priceCurrency":"USD","price":"2.00","availability":"https://schema.org/InStock"},"aggregateRating":{"@type":"AggregateRating","ratingValue":"4.9","reviewCount":"327","bestRating":"5","worstRating":"1"}},
+    {"@type":"VideoObject","name":"Featured video — how opacity can cause damage","description":"Full-length feature on hidden systems and why transparency matters.","thumbnailUrl":"https://picsum.photos/seed/moneylab-video/1280/720","uploadDate":"2024-01-01","contentUrl":"https://www.example.com/video.mp4","encodingFormat":"video/mp4"}
+  ]
+}
+</script>
+
+<style>
+  :root{
+    --bg:#070a10;
+    --bg-2:#0b1018;
+    --black:#000000;
+    --surface:#101722;
+    --surface-2:#151f2e;
+    --border:#1f2c3d;
+    --border-2:#2a3a52;
+    --text:#e6edf6;
+    --dim:#8b9bb4;
+    --faint:#5a6a82;
+    --blue:#3b82f6;
+    --blue-glow:rgba(59,130,246,.35);
+    --purple:#8b5cf6;
+    --purple-glow:rgba(139,92,246,.3);
+    --green:#10b981;
+    --green-glow:rgba(16,185,129,.3);
+    --amber:#f59e0b;
+    --red:#ef4444;
+    --tg:#229ED9;
+    --tg-glow:rgba(34,158,217,.35);
+    --mono:ui-monospace,'SF Mono',Menlo,Consolas,'Liberation Mono',monospace;
+    --sans:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;position:relative}
+  a{color:inherit;text-decoration:none}
+  img{display:block;max-width:100%}
+  .hidden{display:none !important}
+  .container{max-width:1160px;margin:0 auto;padding:0 20px;position:relative;z-index:2}
+  .grad{background:linear-gradient(90deg,var(--blue),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 26px;border-radius:6px;font-weight:700;font-size:14px;letter-spacing:.3px;cursor:pointer;transition:.2s;border:0}
+  .btn-primary{background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff;box-shadow:0 8px 24px var(--blue-glow)}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 32px var(--blue-glow)}
+  .btn-ghost{background:transparent;color:var(--text);border:1px solid var(--border-2)}
+  .btn-ghost:hover{background:var(--surface-2);border-color:var(--blue)}
+  .btn-small{padding:9px 18px;font-size:13px;border-radius:4px}
+
+  /* ANIMATED BACKGROUND */
+  .bg-layer{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;background:radial-gradient(ellipse 80% 50% at 50% -20%,#0d1826,transparent 70%)}
+  .bg-orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:.5;will-change:transform}
+  .orb-1{width:520px;height:520px;background:rgba(59,130,246,.35);top:-160px;left:-120px;animation:orbFloat1 22s ease-in-out infinite}
+  .orb-2{width:460px;height:460px;background:rgba(139,92,246,.3);top:30%;right:-160px;animation:orbFloat2 26s ease-in-out infinite}
+  .orb-3{width:420px;height:420px;background:rgba(16,185,129,.18);bottom:-140px;left:25%;animation:orbFloat3 30s ease-in-out infinite}
+  @keyframes orbFloat1{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(120px,80px) scale(1.15)}}
+  @keyframes orbFloat2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-100px,120px) scale(1.1)}}
+  @keyframes orbFloat3{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(80px,-100px) scale(1.2)}}
+  .bg-grid{position:absolute;inset:-50%;width:200%;height:200%;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 60% 60% at 50% 40%,#000 20%,transparent 75%);animation:gridDrift 60s linear infinite}
+  @keyframes gridDrift{from{transform:translate(0,0)}to{transform:translate(60px,60px)}}
+  .bg-sym{position:absolute;font-size:clamp(40px,7vw,110px);font-weight:900;color:rgba(255,255,255,.03);user-select:none;pointer-events:none;font-family:var(--sans);animation:symFloat 18s ease-in-out infinite}
+  .sym-btc{top:15%;left:6%;animation-delay:0s}
+  .sym-eth{top:55%;right:8%;animation-delay:-4s}
+  .sym-usd{top:78%;left:14%;animation-delay:-8s}
+  .sym-eur{top:30%;right:20%;animation-delay:-12s}
+  @keyframes symFloat{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-24px) rotate(6deg)}}
+
+  .scroll-progress{position:fixed;top:0;left:0;height:3px;width:0;z-index:1000;background:linear-gradient(90deg,var(--blue),var(--purple));transition:width .1s linear;pointer-events:none}
+  .back-to-top{position:fixed;bottom:24px;right:24px;width:44px;height:44px;z-index:90;background:var(--surface);border:1px solid var(--border-2);color:var(--text);border-radius:6px;cursor:pointer;font-size:18px;display:grid;place-items:center;opacity:0;visibility:hidden;transition:.25s;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+  .back-to-top.show{opacity:1;visibility:visible}
+  .back-to-top:hover{border-color:var(--blue);color:var(--blue);transform:translateY(-3px)}
+
+  /* ================= HEADER — simplified ================= */
+  .site-header{position:sticky;top:0;z-index:90;background:rgba(7,10,16,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}
+  .header-inner{display:flex;align-items:center;justify-content:space-between;height:64px;gap:16px}
+  .logo{display:flex;align-items:center;gap:10px;flex-shrink:0}
+  .logo-mark{width:34px;height:34px;display:grid;place-items:center;font-size:15px;background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff;font-weight:800;border-radius:5px}
+  .logo-name{font-size:17px;font-weight:800;letter-spacing:.2px}
+  .logo-name span{color:var(--blue)}
+  .nav{display:flex;gap:24px;align-items:center}
+  .nav a{font-size:13px;font-weight:600;color:var(--dim);transition:.15s}
+  .nav a:hover{color:var(--text)}
+  .header-actions{display:flex;gap:10px;align-items:center;flex-shrink:0}
+  .lang-toggle{display:inline-flex;border:1px solid var(--border-2);border-radius:4px;overflow:hidden;background:var(--surface)}
+  .lang-btn{border:0;background:transparent;color:var(--dim);font:inherit;font-size:11px;font-weight:800;padding:7px 12px;cursor:pointer;transition:.15s;letter-spacing:.5px}
+  .lang-btn.active{background:var(--blue);color:#fff}
+  .lang-btn:hover:not(.active){color:var(--text)}
+
+  /* ================= SECTIONS ================= */
+  .section{padding:88px 0;position:relative}
+  .section-head{text-align:center;max-width:700px;margin:0 auto 52px}
+  .section-tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--blue);margin-bottom:14px;padding:4px 12px;border:1px solid rgba(59,130,246,.3);border-radius:20px;background:rgba(59,130,246,.06)}
+  .section-head h2{font-size:clamp(26px,4vw,38px);font-weight:800;letter-spacing:-.02em;margin-bottom:12px}
+  .section-head p{color:var(--dim);font-size:15px;max-width:600px;margin:0 auto}
+
+  .reveal{opacity:0;transform:translateY(36px);transition:opacity .8s cubic-bezier(.2,.8,.2,1),transform .8s cubic-bezier(.2,.8,.2,1)}
+  .reveal.visible{opacity:1;transform:none}
+  .reveal-left{opacity:0;transform:translateX(-48px);transition:opacity .8s cubic-bezier(.2,.8,.2,1),transform .8s cubic-bezier(.2,.8,.2,1)}
+  .reveal-left.visible{opacity:1;transform:none}
+  .reveal-right{opacity:0;transform:translateX(48px);transition:opacity .8s cubic-bezier(.2,.8,.2,1),transform .8s cubic-bezier(.2,.8,.2,1)}
+  .reveal-right.visible{opacity:1;transform:none}
+
+  /* HERO */
+  .hero{position:relative;padding:110px 0 80px;text-align:center}
+  .hero-content{position:relative;z-index:2;max-width:800px;margin:0 auto;padding:0 20px}
+  .hero-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;border:1px solid rgba(59,130,246,.35);border-radius:20px;background:rgba(59,130,246,.08);font-size:12px;font-weight:600;color:var(--blue);margin-bottom:24px;animation:badgePulse 3s ease-in-out infinite}
+  @keyframes badgePulse{0%,100%{box-shadow:0 0 0 0 rgba(59,130,246,.3)}50%{box-shadow:0 0 0 8px rgba(59,130,246,0)}}
+  .hero h1{font-size:clamp(38px,6.5vw,68px);font-weight:900;letter-spacing:-.03em;line-height:1.08;margin-bottom:22px}
+  .hero-sub{font-size:clamp(16px,2vw,19px);color:var(--dim);max-width:640px;margin:0 auto 34px;line-height:1.6}
+  .hero-cta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+  .hero-rating{display:inline-flex;align-items:center;gap:10px;margin-top:28px;font-size:12.5px;color:var(--dim);flex-wrap:wrap;justify-content:center}
+  .hero-stars{color:var(--amber);letter-spacing:2px;font-size:14px}
+  .hero-rating b{color:var(--text)}
+
+  .ticker{background:rgba(16,23,34,.8);border-top:1px solid var(--border);border-bottom:1px solid var(--border);overflow:hidden;white-space:nowrap;padding:12px 0;position:relative;z-index:2}
+  .ticker-track{display:inline-flex;gap:48px;animation:tickerScroll 42s linear infinite;font-size:12px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--dim);width:max-content}
+  .ticker-track span{display:inline-flex;align-items:center;gap:8px}
+  .ticker-track .dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green)}
+  @keyframes tickerScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+  .logos-strip{background:var(--bg-2);border-bottom:1px solid var(--border);padding:28px 0;overflow:hidden;position:relative;z-index:2}
+  .logos-label{text-align:center;font-size:10.5px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;color:var(--faint);margin-bottom:18px}
+  .logos-track{display:flex;gap:56px;width:max-content;animation:logosScroll 34s linear infinite}
+  .logos-track:hover{animation-play-state:paused}
+  @keyframes logosScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  .logo-item{display:flex;align-items:center;gap:10px;color:var(--dim);opacity:.75;transition:.25s;white-space:nowrap;font-weight:700;font-size:14px;letter-spacing:.3px}
+  .logo-item:hover{opacity:1;color:var(--text)}
+  .logo-item svg{width:26px;height:26px;flex-shrink:0}
+
+  .features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .feature-card{background:rgba(16,23,34,.7);backdrop-filter:blur(10px);border:1px solid var(--border);border-radius:8px;padding:28px 24px;transition:.3s;position:relative;overflow:hidden}
+  .feature-card:hover{border-color:var(--border-2);transform:translateY(-6px);box-shadow:0 18px 40px rgba(0,0,0,.5)}
+  .feature-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--blue),var(--purple));opacity:0;transition:.3s}
+  .feature-card:hover::before{opacity:1}
+  .feature-icon{width:48px;height:48px;display:grid;place-items:center;background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.3);border-radius:6px;margin-bottom:18px;color:var(--blue);transition:.3s}
+  .feature-card:hover .feature-icon{background:rgba(59,130,246,.18);transform:scale(1.06)}
+  .feature-icon svg{width:24px;height:24px}
+  .feature-card h3{font-size:16px;font-weight:700;margin-bottom:8px}
+  .feature-card p{font-size:13.5px;color:var(--dim);line-height:1.6}
+
+  /* TIMELINE */
+  .how-section{background:var(--bg-2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);overflow:hidden}
+  .timeline{position:relative;max-width:840px;margin:0 auto;padding:10px 0}
+  .timeline-rail{position:absolute;left:36px;top:0;bottom:0;width:2px;background:var(--border);z-index:0}
+  .timeline-fill{position:absolute;left:36px;top:0;width:2px;height:0;z-index:1;background:linear-gradient(180deg,var(--blue),var(--purple));box-shadow:0 0 12px var(--blue-glow);transition:height .9s cubic-bezier(.2,.8,.2,1)}
+  .t-step{position:relative;z-index:2;display:flex;gap:22px;align-items:flex-start;margin-bottom:44px;padding-left:0}
+  .t-step:last-child{margin-bottom:0}
+  .t-dot{flex-shrink:0;width:44px;height:44px;border-radius:50%;background:var(--surface);border:2px solid var(--border-2);display:grid;place-items:center;font-weight:800;font-size:14px;color:var(--dim);transition:all .5s cubic-bezier(.2,.8,.2,1);position:relative;z-index:3}
+  .t-step.visible .t-dot{border-color:var(--blue);color:#fff;background:linear-gradient(135deg,var(--blue),var(--purple));box-shadow:0 0 0 6px rgba(59,130,246,.12),0 0 28px var(--blue-glow);transform:scale(1.08)}
+  .t-card{background:rgba(16,23,34,.8);backdrop-filter:blur(10px);border:1px solid var(--border);border-radius:8px;padding:22px 24px;flex:1;min-width:0;transition:.4s;position:relative}
+  .t-step.visible .t-card{border-color:var(--border-2);box-shadow:0 12px 32px rgba(0,0,0,.35)}
+  .t-card h3{font-size:16px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+  .t-card h3 svg{width:18px;height:18px;color:var(--blue);flex-shrink:0}
+  .t-card p{font-size:13.5px;color:var(--dim);line-height:1.65}
+  .t-badge{display:inline-block;margin-top:12px;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;padding:4px 10px;border-radius:20px;background:rgba(16,185,129,.1);color:var(--green);border:1px solid rgba(16,185,129,.25)}
+
+  /* ABOUT */
+  .about-section{background:var(--black);border-top:1px solid var(--border);border-bottom:1px solid var(--border);position:relative;overflow:hidden}
+  .about-section::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 50% 60% at 80% 20%,rgba(59,130,246,.08),transparent 60%)}
+  .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:52px;align-items:center;position:relative;z-index:2}
+  .about-text h2{font-size:clamp(24px,3.4vw,34px);font-weight:800;margin-bottom:18px;letter-spacing:-.02em;line-height:1.2}
+  .about-text p{color:var(--dim);font-size:14.5px;margin-bottom:16px;line-height:1.75}
+  .about-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:26px}
+  .stat{text-align:center;padding:18px 10px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px;transition:.3s}
+  .stat:hover{border-color:var(--blue);transform:translateY(-3px)}
+  .stat b{display:block;font-size:24px;font-weight:800;color:var(--blue);margin-bottom:3px}
+  .stat span{font-size:9.5px;text-transform:uppercase;letter-spacing:.8px;color:var(--faint);font-weight:700}
+  .about-visual{aspect-ratio:4/3;border-radius:10px;border:1px solid var(--border);display:grid;place-items:center;position:relative;overflow:hidden;background:linear-gradient(135deg,rgba(59,130,246,.08),rgba(139,92,246,.08))}
+  .about-visual .float-icons{position:relative;width:100%;height:100%}
+  .about-visual .f-icon{position:absolute;color:rgba(255,255,255,.18);animation:aboutFloat 7s ease-in-out infinite}
+  .about-visual .f-icon svg{width:100%;height:100%}
+  .f-1{width:52px;height:52px;top:14%;left:16%;color:rgba(59,130,246,.55);animation-delay:0s}
+  .f-2{width:44px;height:44px;top:58%;left:64%;color:rgba(139,92,246,.55);animation-delay:-2s}
+  .f-3{width:48px;height:48px;top:26%;left:70%;color:rgba(16,185,129,.5);animation-delay:-4s}
+  .f-4{width:40px;height:40px;top:68%;left:22%;color:rgba(245,158,11,.45);animation-delay:-1s}
+  .f-5{width:56px;height:56px;top:44%;left:44%;color:rgba(255,255,255,.22);animation-delay:-3s}
+  @keyframes aboutFloat{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-16px) rotate(8deg)}}
+
+  /* VIDEO */
+  .video-wrapper{max-width:920px;margin:0 auto;border-radius:10px;overflow:hidden;border:1px solid var(--border);box-shadow:0 20px 60px rgba(0,0,0,.6);aspect-ratio:16/9;background:#000;position:relative;z-index:2}
+  .video-wrapper video{width:100%;height:100%;display:block;background:#000;outline:none}
+
+  /* GALLERY */
+  .gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .gallery-card{border-radius:10px;overflow:hidden;border:1px solid var(--border);background:var(--surface);transition:.3s;position:relative}
+  .gallery-card:hover{transform:translateY(-6px);border-color:var(--border-2);box-shadow:0 20px 44px rgba(0,0,0,.5)}
+  .gallery-card img{width:100%;height:230px;object-fit:cover;display:block;background:var(--surface-2);transition:.5s}
+  .gallery-card:hover img{transform:scale(1.05)}
+  .gallery-card .img-wrap{overflow:hidden}
+  .gallery-caption{padding:14px 16px;font-size:12px;color:var(--dim);line-height:1.5}
+
+  /* PRICING */
+  .pricing-section{background:var(--bg-2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+  .pricing-card{max-width:520px;margin:0 auto;background:rgba(16,23,34,.9);backdrop-filter:blur(14px);border:1px solid var(--border);border-radius:12px;padding:36px 32px;position:relative;overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.6)}
+  .pricing-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--blue),var(--purple))}
+  .price-display{text-align:center;margin-bottom:4px}
+  .price-amount{font-size:56px;font-weight:900;letter-spacing:-.03em;background:linear-gradient(135deg,#fff,var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .price-currency{font-size:16px;color:var(--dim);font-weight:700}
+  .price-sub{text-align:center;font-size:13px;color:var(--dim);margin-bottom:24px}
+  .price-sub strong{color:var(--green)}
+  .crypto-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px}
+  .crypto-tab{padding:10px 4px;border:1px solid var(--border);border-radius:6px;background:var(--bg-2);cursor:pointer;transition:.2s;text-align:center;font-size:11px;font-weight:700;color:var(--dim);user-select:none}
+  .crypto-tab:hover{border-color:var(--border-2);color:var(--text)}
+  .crypto-tab.active{border-color:var(--blue);background:rgba(59,130,246,.12);color:var(--blue);box-shadow:0 0 0 1px var(--blue-glow)}
+  .crypto-tab .coin-icon{font-size:18px;display:block;margin-bottom:2px}
+  .payment-details{background:var(--bg-2);border:1px solid var(--border);border-radius:6px;padding:16px;margin-bottom:14px}
+  .payment-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);gap:10px}
+  .payment-row:last-child{border-bottom:0}
+  .payment-label{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.8px;font-weight:700;white-space:nowrap}
+  .payment-value{font-size:12px;font-family:var(--mono);font-weight:600;word-break:break-all;text-align:right;max-width:70%}
+  .payment-value.amount{color:var(--green);font-size:14px}
+  .copy-btn{width:100%;border:1px solid var(--border-2);background:transparent;color:var(--dim);font:inherit;font-size:11px;font-weight:700;padding:9px;border-radius:4px;cursor:pointer;transition:.15s;margin-bottom:10px}
+  .copy-btn:hover{color:var(--blue);border-color:var(--blue)}
+  .rate-note{font-size:10px;color:var(--faint);text-align:center;margin-bottom:16px;line-height:1.5}
+  .verification-section{margin-top:20px;padding-top:20px;border-top:1px solid var(--border)}
+  .verification-section h3{font-size:14px;font-weight:700;margin-bottom:4px}
+  .verification-section p{font-size:11px;color:var(--dim);margin-bottom:10px}
+  .tx-input{width:100%;background:var(--bg-2);border:1px solid var(--border);border-radius:4px;padding:10px 12px;color:var(--text);font:inherit;font-size:11px;font-family:var(--mono);outline:none;margin-bottom:8px}
+  .tx-input:focus{border-color:var(--blue);box-shadow:0 0 0 2px var(--blue-glow)}
+  .verification-result{font-size:11px;line-height:1.5;padding:10px;border-radius:4px;display:none;margin-top:8px}
+  .verification-result.show{display:block}
+  .verification-result.success{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.3);color:var(--green)}
+  .verification-result.error{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:var(--red)}
+  .verification-result.info{background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.3);color:var(--blue)}
+
+  .key-reveal{margin-top:14px;padding:16px;background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.3);border-radius:6px;display:none;animation:popIn .4s cubic-bezier(.2,1,.3,1)}
+  @keyframes popIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
+  .key-reveal h4{font-size:11.5px;font-weight:700;color:var(--green);margin-bottom:8px;text-transform:uppercase;letter-spacing:.6px}
+  .key-contact-text{font-size:11.5px;color:var(--dim);line-height:1.6;margin-bottom:12px}
+  .key-tg-link{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:13px;background:linear-gradient(135deg,var(--tg),#1a7fb3);color:#fff;font-family:var(--mono);font-size:13px;font-weight:700;letter-spacing:.4px;border-radius:6px;margin-bottom:8px;box-shadow:0 8px 24px var(--tg-glow);transition:.2s}
+  .key-tg-link:hover{transform:translateY(-2px);box-shadow:0 12px 32px var(--tg-glow);opacity:.95}
+  .key-tg-link svg{width:18px;height:18px;flex-shrink:0}
+  .key-login-btn{width:100%;padding:10px;font-size:11px}
+
+  /* REVIEWS */
+  .reviews-section{overflow:hidden}
+  .reviews-viewport{overflow:hidden;position:relative;z-index:2}
+  .reviews-track{display:flex;gap:20px;transition:transform .55s cubic-bezier(.2,.8,.2,1)}
+  .review-card{flex:0 0 calc((100% - 40px)/3);background:rgba(16,23,34,.8);backdrop-filter:blur(10px);border:1px solid var(--border);border-radius:10px;padding:26px 24px;display:flex;flex-direction:column;gap:14px;transition:.3s}
+  .review-card:hover{border-color:var(--border-2);box-shadow:0 16px 40px rgba(0,0,0,.4)}
+  .review-stars{color:var(--amber);letter-spacing:2px;font-size:14px}
+  .review-text{font-size:13.5px;color:var(--text);line-height:1.65;flex:1}
+  .review-author{display:flex;align-items:center;gap:12px;padding-top:14px;border-top:1px solid var(--border)}
+  .review-avatar{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:14px;color:#fff;flex-shrink:0}
+  .review-meta b{display:block;font-size:13px;font-weight:700}
+  .review-meta span{font-size:11px;color:var(--dim)}
+  .reviews-controls{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:28px;position:relative;z-index:2}
+  .rev-arrow{width:42px;height:42px;border-radius:50%;border:1px solid var(--border-2);background:var(--surface);color:var(--text);cursor:pointer;display:grid;place-items:center;font-size:16px;transition:.2s}
+  .rev-arrow:hover{border-color:var(--blue);color:var(--blue);background:rgba(59,130,246,.1)}
+  .rev-arrow:disabled{opacity:.3;cursor:not-allowed}
+  .rev-dots{display:flex;gap:8px}
+  .rev-dot{width:8px;height:8px;border-radius:50%;background:var(--border-2);cursor:pointer;transition:.2s;border:0;padding:0}
+  .rev-dot.active{background:var(--blue);width:22px;border-radius:5px}
+
+  /* FAQ */
+  .faq-list{max-width:800px;margin:0 auto;display:flex;flex-direction:column;gap:10px;position:relative;z-index:2}
+  .faq-item{background:rgba(16,23,34,.7);backdrop-filter:blur(10px);border:1px solid var(--border);border-radius:8px;overflow:hidden;transition:.25s}
+  .faq-item[open]{border-color:var(--border-2);background:rgba(21,31,46,.85)}
+  .faq-item summary{padding:18px 22px;font-size:14px;font-weight:700;cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:16px;user-select:none}
+  .faq-item summary::-webkit-details-marker{display:none}
+  .faq-item summary::after{content:'+';font-size:20px;font-weight:400;color:var(--dim);transition:.25s;flex-shrink:0}
+  .faq-item[open] summary::after{content:'−';color:var(--blue);transform:rotate(180deg)}
+  .faq-item p{padding:0 22px 18px;font-size:13.5px;color:var(--dim);line-height:1.7}
+
+  /* FOOTER */
+  .site-footer{background:var(--bg-2);border-top:1px solid var(--border);padding:60px 0 30px;position:relative;z-index:2}
+  .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px}
+  .footer-brand p{font-size:12.5px;color:var(--dim);line-height:1.7;margin-top:14px;max-width:320px}
+  .footer-col h4{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--faint);margin-bottom:14px}
+  .footer-col a{display:block;font-size:12.5px;color:var(--dim);margin-bottom:9px;transition:.15s}
+  .footer-col a:hover{color:var(--text)}
+  .footer-bottom{border-top:1px solid var(--border);padding-top:24px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;font-size:11px;color:var(--faint)}
+
+  /* TOASTS — top right */
+  .purchase-toasts{position:fixed;top:80px;right:20px;z-index:120;display:flex;flex-direction:column;gap:8px;max-width:300px;pointer-events:none}
+  .purchase-toast{display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--green);border-radius:0 6px 6px 0;box-shadow:0 8px 28px rgba(0,0,0,.55);animation:purchaseIn .35s ease;font-size:11.5px;color:var(--text);line-height:1.4;pointer-events:auto}
+  .purchase-toast.out{animation:purchaseOut .3s ease forwards}
+  @keyframes purchaseIn{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:none}}
+  @keyframes purchaseOut{to{opacity:0;transform:translateX(40px)}}
+  .purchase-toast .p-icon{font-size:14px;flex-shrink:0}
+  .purchase-toast b{color:var(--green);font-weight:700}
+
+  /* LOGIN MODAL */
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;display:grid;place-items:center;padding:20px;animation:fadeIn .2s ease}
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  .login-card{width:100%;max-width:440px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:32px 28px;box-shadow:0 24px 70px rgba(0,0,0,.7);position:relative}
+  .login-card h3{font-size:18px;font-weight:800;margin-bottom:4px}
+  .login-card .sub{font-size:12px;color:var(--dim);margin-bottom:20px;line-height:1.5}
+  .login-input{width:100%;background:var(--bg-2);border:1px solid var(--border);border-radius:4px;padding:12px 14px;color:var(--text);font:inherit;font-size:12px;font-family:var(--mono);outline:none;margin-bottom:8px}
+  .login-input:focus{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-glow)}
+  .login-error{font-size:11px;color:var(--red);min-height:16px;margin-bottom:10px;font-weight:600}
+  .modal-close{position:absolute;top:14px;right:14px;background:none;border:0;color:var(--dim);font-size:22px;cursor:pointer;line-height:1}
+  .modal-close:hover{color:var(--text)}
+
+  /* ================= RESPONSIVE ================= */
+  /* Tablet: hide nav links */
+  @media(max-width:900px){
+    .nav{display:none}
+    .features-grid{grid-template-columns:repeat(2,1fr)}
+  }
+
+  /* Mobile: header stays single-row — logo left, lang right */
+  @media(max-width:768px){
+    .header-inner{
+      height:60px;
+      padding:0;
+      gap:8px;
+    }
+    .logo-mark{width:30px;height:30px;font-size:13px}
+    .logo-name{font-size:15px}
+    .lang-btn{padding:6px 10px;font-size:10.5px}
+
+    .purchase-toasts{top:76px;right:12px;max-width:280px}
+
+    /* Timeline: single column, rail on left */
+    .timeline-rail,.timeline-fill{left:22px !important;transform:none !important}
+    .t-step,.t-step.right{width:100%;padding:0 0 0 62px;margin:0 0 32px 0;justify-content:flex-start}
+    .t-step .t-dot,.t-step.right .t-dot{position:absolute;left:0;top:14px;right:auto}
+
+    .section{padding:60px 0}
+    .hero{padding:70px 0 56px}
+    .about-grid{grid-template-columns:1fr;gap:36px}
+    .about-stats{grid-template-columns:repeat(3,1fr)}
+    .gallery-grid{grid-template-columns:1fr}
+    .review-card{flex:0 0 calc((100% - 20px)/2)}
+    .footer-grid{grid-template-columns:1fr 1fr;gap:28px}
+  }
+
+  @media(max-width:600px){
+    .crypto-tabs{grid-template-columns:repeat(2,1fr)}
+    .payment-value{max-width:60%}
+    .review-card{flex:0 0 100%}
+    .features-grid{grid-template-columns:1fr}
+    .purchase-toasts{max-width:260px;right:10px;top:72px}
+  }
+
+  @media(max-width:480px){
+    .footer-grid{grid-template-columns:1fr}
+    .login-card{padding:26px 20px}
+    .pricing-card{padding:28px 20px}
+    .logo-name{font-size:14px}
+    .logo-mark{width:28px;height:28px;font-size:12px}
+  }
+
+  @media(prefers-reduced-motion:reduce){
+    *{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-layer" aria-hidden="true">
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
+  <div class="bg-orb orb-3"></div>
+  <div class="bg-grid"></div>
+  <div class="bg-sym sym-btc">₿</div>
+  <div class="bg-sym sym-eth">Ξ</div>
+  <div class="bg-sym sym-usd">$</div>
+  <div class="bg-sym sym-eur">€</div>
+</div>
+
+<div class="scroll-progress" id="scrollProgress"></div>
+<button class="back-to-top" id="backToTop" aria-label="Back to top">↑</button>
+<div class="purchase-toasts" id="purchaseToasts"></div>
+
+<!-- ===== HEADER — simplified (logo + language toggle only) ===== -->
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="#" class="logo" aria-label="MoneyLab home">
+      <div class="logo-mark">◈</div>
+      <div class="logo-name">Money<span>Lab</span></div>
+    </a>
+    <nav class="nav" aria-label="Main navigation">
+      <a href="#features" data-i18n="nav_features">Features</a>
+      <a href="#how" data-i18n="nav_how">How it Works</a>
+      <a href="#about" data-i18n="nav_about">About</a>
+      <a href="#reviews" data-i18n="nav_reviews">Reviews</a>
+      <a href="#faq" data-i18n="nav_faq">FAQ</a>
+    </nav>
+    <div class="header-actions">
+      <div class="lang-toggle" role="group" aria-label="Language">
+        <button class="lang-btn active" data-lang="en">EN</button>
+        <button class="lang-btn" data-lang="ru">RU</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge" data-i18n="hero_badge">🔒 One-time payment · Instant access</div>
+    <h1>
+      <span data-i18n="hero_h1a">Learn How Money</span>
+      <span class="grad" data-i18n="hero_h1b">Really Moves</span>
+    </h1>
+    <p class="hero-sub" data-i18n="hero_sub">The interactive simulator that turns bank wires and crypto transfers into a story anyone can follow — in minutes. No real money. No jargon. Just clarity.</p>
+    <div class="hero-cta">
+      <a href="#pricing" class="btn btn-primary" data-i18n="hero_cta1">Get Access for $2</a>
+      <a href="#video" class="btn btn-ghost" data-i18n="hero_cta2">▶ Watch the video</a>
+    </div>
+    <div class="hero-rating">
+      <span class="hero-stars">★★★★★</span>
+      <span><b>4.9/5</b> <span data-i18n="hero_rating">from 327+ learners worldwide</span></span>
+    </div>
+  </div>
+</section>
+
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track">
+    <span><span class="dot"></span> Bank wires explained step by step</span>
+    <span><span class="dot"></span> Crypto transfers demystified</span>
+    <span><span class="dot"></span> No real money — 100% safe sandbox</span>
+    <span><span class="dot"></span> Built for kids, beginners & curious minds</span>
+    <span><span class="dot"></span> Instant access after payment</span>
+    <span><span class="dot"></span> Bank wires explained step by step</span>
+    <span><span class="dot"></span> Crypto transfers demystified</span>
+    <span><span class="dot"></span> No real money — 100% safe sandbox</span>
+    <span><span class="dot"></span> Built for kids, beginners & curious minds</span>
+    <span><span class="dot"></span> Instant access after payment</span>
+  </div>
+</div>
+
+<div class="logos-strip" aria-hidden="true">
+  <div class="logos-label" data-i18n="logos_label">Trusted by educators and finance-curious people</div>
+  <div class="logos-track" id="logosTrack"></div>
+</div>
+
+<section class="section" id="features">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="section-tag" data-i18n="tag_features">Features</div>
+      <h2 data-i18n="features_h">Everything you need to make money make sense</h2>
+      <p data-i18n="features_p">MoneyLab is not a textbook. It is a hands-on simulator that shows every step of a transfer — live.</p>
+    </div>
+    <div class="features-grid" id="featuresGrid"></div>
+  </div>
+</section>
+
+<section class="section how-section" id="how">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="section-tag" data-i18n="tag_how">How it works</div>
+      <h2 data-i18n="how_h">From payment to understanding in four steps</h2>
+      <p data-i18n="how_p">No onboarding calls. No downloads. Just pay, verify, unlock, and learn.</p>
+    </div>
+    <div class="timeline" id="timeline">
+      <div class="timeline-rail"></div>
+      <div class="timeline-fill" id="timelineFill"></div>
+
+      <div class="t-step" data-step="0">
+        <div class="t-dot">01</div>
+        <div class="t-card">
+          <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="13" rx="2"/><path d="M2 10h20"/><circle cx="17" cy="14.5" r="1.5" fill="currentColor" stroke="none"/></svg><span data-i18n="step1_t">Pay $2 in crypto</span></h3>
+          <p data-i18n="step1_p">Choose Bitcoin, Ethereum, BNB, or Polygon. The live rate converts $2 into the exact amount you need to send.</p>
+          <span class="t-badge" data-i18n="step1_b">BTC · ETH · BNB · MATIC</span>
+        </div>
+      </div>
+
+      <div class="t-step right" data-step="1">
+        <div class="t-dot">02</div>
+        <div class="t-card">
+          <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg><span data-i18n="step2_t">Verify your transaction</span></h3>
+          <p data-i18n="step2_p">Paste the transaction ID from your wallet. We check the blockchain automatically — no account or email needed.</p>
+          <span class="t-badge" data-i18n="step2_b">On-chain verification</span>
+        </div>
+      </div>
+
+      <div class="t-step" data-step="2">
+        <div class="t-dot">03</div>
+        <div class="t-card">
+          <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="15" r="4"/><path d="M10.85 12.15L19 4"/><path d="M18 5l2 2"/><path d="M15 8l2 2"/></svg><span data-i18n="step3_t">Reveal your access key</span></h3>
+          <p data-i18n="step3_p">Once verified, contact us on Telegram to receive your unique 64-character key. Copy it — it is your only key.</p>
+          <span class="t-badge" data-i18n="step3_b">64-character key</span>
+        </div>
+      </div>
+
+      <div class="t-step right" data-step="3">
+        <div class="t-dot">04</div>
+        <div class="t-card">
+          <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><span data-i18n="step4_t">Unlock the simulator</span></h3>
+          <p data-i18n="step4_p">Paste the key into the login screen and start exploring bank wires and crypto transfers right away.</p>
+          <span class="t-badge" data-i18n="step4_b">Instant access</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section about-section" id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-text reveal-left">
+        <div class="section-tag" style="margin-bottom:14px" data-i18n="tag_about">Who we are</div>
+        <h2 data-i18n="about_h">Built by educators and engineers tired of confusing money talk</h2>
+        <p data-i18n="about_p1">MoneyLab started as a weekend project after watching too many smart people nod along to financial explanations without really understanding them. We believed the problem was not intelligence — it was the format.</p>
+        <p data-i18n="about_p2">So we built a simulator that behaves like a real transfer system, but explains itself in plain language at every step. No charts to memorize. No acronyms without context. Just a clear journey from “send” to “settled.”</p>
+        <div class="about-stats">
+          <div class="stat"><b>100%</b><span data-i18n="about_s1">Simulation</span></div>
+          <div class="stat"><b>0</b><span data-i18n="about_s2">Real money</span></div>
+          <div class="stat"><b>2 min</b><span data-i18n="about_s3">To first “aha”</span></div>
+        </div>
+      </div>
+      <div class="about-visual reveal-right" aria-hidden="true">
+        <div class="float-icons">
+          <div class="f-icon f-1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21h18M4 10h16M5 10V21M19 10V21M9 10V21M15 10V21M12 3L3 8h18L12 3z"/></svg></div>
+          <div class="f-icon f-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.5h4a1.8 1.8 0 010 3.6h-3a1.8 1.8 0 000 3.6h4"/></svg></div>
+          <div class="f-icon f-3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></svg></div>
+          <div class="f-icon f-4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"/><path d="M9 12l2 2 4-4"/></svg></div>
+          <div class="f-icon f-5"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 17l5-5 4 3 8-8"/><path d="M14 7h6v6"/></svg></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="video">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="section-tag" data-i18n="tag_video">Watch</div>
+      <h2 data-i18n="video_h">See why transparency matters</h2>
+      <p data-i18n="video_p">A full-length featured video on how systems can hide what is really happening — and why clear explanations are essential.</p>
+    </div>
+    <div class="video-wrapper reveal">
+      <video src="https://www.example.com/video.mp4" controls playsinline preload="metadata" poster="https://picsum.photos/seed/moneylab-video/1280/720">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="gallery">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="section-tag" data-i18n="tag_gallery">Inside MoneyLab</div>
+      <h2 data-i18n="gallery_h">Three views of the simulator</h2>
+      <p data-i18n="gallery_p">Clean, focused, and built to make complex ideas feel simple.</p>
+    </div>
+    <div class="gallery-grid">
+      <div class="gallery-card reveal"><div class="img-wrap"><img src="https://picsum.photos/seed/moneylab-bank/800/600" alt="Bank transfer simulator interface" loading="lazy"></div><div class="gallery-caption" data-i18n="gal1">Bank wire journey — every step explained in plain language.</div></div>
+      <div class="gallery-card reveal" style="transition-delay:.1s"><div class="img-wrap"><img src="https://picsum.photos/seed/moneylab-crypto/800/600" alt="Crypto transfer simulator interface" loading="lazy"></div><div class="gallery-caption" data-i18n="gal2">Crypto transfer — from signature to on-chain confirmation.</div></div>
+      <div class="gallery-card reveal" style="transition-delay:.2s"><div class="img-wrap"><img src="https://picsum.photos/seed/moneylab-log/800/600" alt="Live ledger log and notifications" loading="lazy"></div><div class="gallery-caption" data-i18n="gal3">Live ledger log and notifications make every action visible.</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section pricing-section" id="pricing">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="section-tag" data-i18n="tag_pricing">Get access</div>
+      <h2 data-i18n="pricing_h">One payment. Lifetime understanding.</h2>
+      <p data-i18n="pricing_p">Pay $2 in crypto and receive your unique access key instantly.</p>
+    </div>
+    <div class="pricing-card reveal">
+      <div class="price-display">
+        <span class="price-amount" id="priceAmount">$2</span>
+        <span class="price-currency">USD</span>
+      </div>
+      <div class="price-sub"><span data-i18n="pricing_once">One-time payment ·</span> <strong data-i18n="pricing_lifetime">Lifetime access</strong></div>
+
+      <div class="crypto-tabs" id="cryptoTabs">
+        <div class="crypto-tab active" data-coin="BTC"><span class="coin-icon">₿</span>BTC</div>
+        <div class="crypto-tab" data-coin="ETH"><span class="coin-icon">Ξ</span>ETH</div>
+        <div class="crypto-tab" data-coin="BNB"><span class="coin-icon">⬡</span>BNB</div>
+        <div class="crypto-tab" data-coin="MATIC"><span class="coin-icon">⬢</span>MATIC</div>
+      </div>
+
+      <div class="payment-details">
+        <div class="payment-row"><span class="payment-label" data-i18n="pay_send">Send exactly</span><span class="payment-value amount" id="cryptoAmountDisplay">—</span></div>
+        <div class="payment-row"><span class="payment-label" data-i18n="pay_addr">To address</span><span class="payment-value" id="cryptoAddressDisplay">—</span></div>
+        <div class="payment-row"><span class="payment-label" data-i18n="pay_net">Network</span><span class="payment-value" id="cryptoNetworkDisplay">—</span></div>
+        <div class="payment-row"><span class="payment-label" data-i18n="pay_rate">Live rate</span><span class="payment-value" id="liveRateDisplay">Loading…</span></div>
+      </div>
+
+      <button class="copy-btn" id="copyAddressBtn" data-i18n="copy_btn">📋 Copy payment address</button>
+      <div class="rate-note" data-i18n="rate_note">Rates update every 60 seconds. Amounts are approximate.</div>
+
+      <button class="btn btn-primary" id="paidBtn" style="width:100%" data-i18n="paid_btn">✅ I've Paid — Verify & Reveal Key</button>
+
+      <div class="verification-section hidden" id="verificationSection">
+        <h3 data-i18n="verify_h">🔍 Verify your payment</h3>
+        <p data-i18n="verify_p">Paste the transaction ID (TXID) from your wallet or block explorer.</p>
+        <input class="tx-input" id="txidInput" placeholder="Enter transaction hash / TXID" spellcheck="false">
+        <button class="btn btn-primary" id="verifyBtn" style="width:100%;padding:11px;font-size:13px" data-i18n="verify_btn">Verify Payment</button>
+        <div class="verification-result" id="verificationResult"></div>
+
+        <div class="key-reveal" id="keyReveal">
+          <h4 data-i18n="key_h">✅ Payment confirmed</h4>
+          <p class="key-contact-text" data-i18n="key_contact">Contact us on Telegram with your TXID to receive your private access key.</p>
+          <a href="https://t.me/example" target="_blank" rel="noopener noreferrer" class="key-tg-link" id="telegramKeyLink">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0a12 12 0 00-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+            </svg>
+            <span id="telegramHandle">t.me/example</span>
+          </a>
+          <button class="btn btn-ghost key-login-btn" id="goToLoginBtn" data-i18n="key_login">Already have your key? Log in →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section reviews-section" id="reviews">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="section-tag" data-i18n="tag_reviews">Reviews</div>
+      <h2 data-i18n="reviews_h">Loved by learners, parents and teachers</h2>
+      <p data-i18n="reviews_p">Real feedback from people who finally understand how money moves.</p>
+    </div>
+    <div class="reviews-viewport"><div class="reviews-track" id="reviewsTrack"></div></div>
+    <div class="reviews-controls">
+      <button class="rev-arrow" id="revPrev" aria-label="Previous reviews">‹</button>
+      <div class="rev-dots" id="revDots"></div>
+      <button class="rev-arrow" id="revNext" aria-label="Next reviews">›</button>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="faq">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="section-tag" data-i18n="tag_faq">FAQ</div>
+      <h2 data-i18n="faq_h">Questions, answered</h2>
+      <p data-i18n="faq_p">Everything you might want to know before getting access.</p>
+    </div>
+    <div class="faq-list" id="faqList"></div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo"><div class="logo-mark">◈</div><div class="logo-name">Money<span>Lab</span></div></div>
+        <p data-i18n="footer_p">Interactive financial education for curious minds. Understand bank wires and crypto transfers — without risking a cent.</p>
+      </div>
+      <div class="footer-col">
+        <h4 data-i18n="footer_product">Product</h4>
+        <a href="#features" data-i18n="nav_features">Features</a>
+        <a href="#how" data-i18n="nav_how">How it works</a>
+        <a href="#pricing" data-i18n="footer_pricing">Pricing</a>
+        <a href="#faq" data-i18n="nav_faq">FAQ</a>
+      </div>
+      <div class="footer-col">
+        <h4 data-i18n="footer_resources">Resources</h4>
+        <a href="#video" data-i18n="footer_video">Featured video</a>
+        <a href="#gallery" data-i18n="footer_shots">Screenshots</a>
+        <a href="#about" data-i18n="nav_about">About us</a>
+        <a href="#" id="footerLogin" data-i18n="login">Log in</a>
+      </div>
+      <div class="footer-col">
+        <h4 data-i18n="footer_legal">Legal</h4>
+        <a href="#" data-i18n="footer_terms">Terms of use</a>
+        <a href="#" data-i18n="footer_privacy">Privacy</a>
+        <a href="#" data-i18n="footer_disclaimer">Educational disclaimer</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 MoneyLab. <span data-i18n="footer_rights">All rights reserved.</span></span>
+      <span data-i18n="footer_note">Educational simulation only · no real money, accounts, or networks.</span>
+    </div>
+  </div>
+</footer>
+
+<div class="modal-overlay hidden" id="loginModal">
+  <div class="login-card">
+    <button class="modal-close" id="closeLogin" aria-label="Close">×</button>
+    <h3 data-i18n="login_h">Welcome back</h3>
+    <p class="sub" data-i18n="login_sub">Enter your 64-character access key to unlock the simulator.</p>
+    <input class="login-input" id="loginKeyInput" type="password" placeholder="Paste your access key" spellcheck="false">
+    <div class="login-error" id="loginError"></div>
+    <button class="btn btn-primary" id="loginSubmit" style="width:100%;padding:12px" data-i18n="login_btn">Unlock Dashboard →</button>
+    <p style="font-size:10px;color:var(--faint);margin-top:14px;text-align:center;line-height:1.5">
+      <span data-i18n="login_nokey">Don't have a key?</span>
+      <a href="#pricing" style="color:var(--blue)" id="modalBuyLink" data-i18n="login_get">Get access for $2</a>
+    </p>
+  </div>
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  /* =========================================================
+     CONFIG
+     ========================================================= */
+  var PRICE_USD = 2;
+  var ACCESS_KEY = 'f2de01de093ba7cc93bdf5e3d8a130d0733461f06393979a08c7b0126daefbb5';
+  var TELEGRAM_URL = 'https://t.me/example';
+  var TELEGRAM_HANDLE = 't.me/example';
+  var NOTIFICATION_INTERVAL_MS = 3 * 60 * 1000;   // 3 minutes
+
+  var CRYPTO_CONFIG = {
+    BTC:  { name:'Bitcoin',  address:'bc1qz93hrdcseuf6ydphs07pk6x2sfnsxxfys74qtk', network:'Bitcoin', decimals:8 },
+    ETH:  { name:'Ethereum', address:'0xF19adD742D231D1B7D2f03D9819ABB4D6C2c263f', network:'Ethereum (ERC-20)', decimals:6 },
+    BNB:  { name:'BNB',      address:'0xF19adD742D231D1B7D2f03D9819ABB4D6C2c263f', network:'BNB Smart Chain (BEP-20)', decimals:6 },
+    MATIC:{ name:'Polygon',  address:'0xF19adD742D231D1B7D2f03D9819ABB4D6C2c263f', network:'Polygon (MATIC)', decimals:6 }
+  };
+
+  var currentCoin = 'BTC';
+  var rates = {};
+  var currentLang = 'en';
+
+  function $(s){ return document.querySelector(s); }
+  function $$(s){ return Array.prototype.slice.call(document.querySelectorAll(s)); }
+
+  /* =========================================================
+     I18N
+     ========================================================= */
+  var I18N = {
+    en: {
+      nav_features:'Features', nav_how:'How it Works', nav_about:'About', nav_reviews:'Reviews', nav_faq:'FAQ',
+      login:'Log in',
+      hero_badge:'🔒 One-time payment · Instant access',
+      hero_h1a:'Learn How Money', hero_h1b:'Really Moves',
+      hero_sub:'The interactive simulator that turns bank wires and crypto transfers into a story anyone can follow — in minutes. No real money. No jargon. Just clarity.',
+      hero_cta1:'Get Access for {price}', hero_cta2:'▶ Watch the video', hero_rating:'from 327+ learners worldwide',
+      logos_label:'Trusted by educators and finance-curious people',
+      tag_features:'Features', features_h:'Everything you need to make money make sense',
+      features_p:'MoneyLab is not a textbook. It is a hands-on simulator that shows every step of a transfer — live.',
+      tag_how:'How it works', how_h:'From payment to understanding in four steps',
+      how_p:'No onboarding calls. No downloads. Just pay, verify, unlock, and learn.',
+      step1_t:'Pay {price} in crypto', step1_p:'Choose Bitcoin, Ethereum, BNB, or Polygon. The live rate converts {price} into the exact amount you need to send.', step1_b:'BTC · ETH · BNB · MATIC',
+      step2_t:'Verify your transaction', step2_p:'Paste the transaction ID from your wallet. We check the blockchain automatically — no account or email needed.', step2_b:'On-chain verification',
+      step3_t:'Reveal your access key', step3_p:'Once verified, contact us on Telegram to receive your unique 64-character key. Copy it — it is your only key.', step3_b:'64-character key',
+      step4_t:'Unlock the simulator', step4_p:'Paste the key into the login screen and start exploring bank wires and crypto transfers right away.', step4_b:'Instant access',
+      tag_about:'Who we are', about_h:'Built by educators and engineers tired of confusing money talk',
+      about_p1:'MoneyLab started as a weekend project after watching too many smart people nod along to financial explanations without really understanding them. We believed the problem was not intelligence — it was the format.',
+      about_p2:'So we built a simulator that behaves like a real transfer system, but explains itself in plain language at every step. No charts to memorize. No acronyms without context. Just a clear journey from “send” to “settled.”',
+      about_s1:'Simulation', about_s2:'Real money', about_s3:'To first “aha”',
+      tag_video:'Watch', video_h:'See why transparency matters',
+      video_p:'A full-length featured video on how systems can hide what is really happening — and why clear explanations are essential.',
+      tag_gallery:'Inside MoneyLab', gallery_h:'Three views of the simulator',
+      gallery_p:'Clean, focused, and built to make complex ideas feel simple.',
+      gal1:'Bank wire journey — every step explained in plain language.',
+      gal2:'Crypto transfer — from signature to on-chain confirmation.',
+      gal3:'Live ledger log and notifications make every action visible.',
+      tag_pricing:'Get access', pricing_h:'One payment. Lifetime understanding.',
+      pricing_p:'Pay {price} in crypto and receive your unique access key instantly.',
+      pricing_once:'One-time payment ·', pricing_lifetime:'Lifetime access',
+      pay_send:'Send exactly', pay_addr:'To address', pay_net:'Network', pay_rate:'Live rate',
+      copy_btn:'📋 Copy payment address', rate_note:'Rates update every 60 seconds. Amounts are approximate.',
+      paid_btn:"✅ I've Paid — Verify & Reveal Key",
+      verify_h:'🔍 Verify your payment', verify_p:'Paste the transaction ID (TXID) from your wallet or block explorer.',
+      verify_btn:'Verify Payment', key_h:'✅ Payment confirmed',
+      key_contact:'Contact us on Telegram with your TXID to receive your private access key.',
+      key_btn:'Open Telegram to get your key', key_login:'Already have your key? Log in →',
+      tag_reviews:'Reviews', reviews_h:'Loved by learners, parents and teachers',
+      reviews_p:'Real feedback from people who finally understand how money moves.',
+      tag_faq:'FAQ', faq_h:'Questions, answered', faq_p:'Everything you might want to know before getting access.',
+      footer_p:'Interactive financial education for curious minds. Understand bank wires and crypto transfers — without risking a cent.',
+      footer_product:'Product', footer_pricing:'Pricing', footer_resources:'Resources', footer_video:'Featured video', footer_shots:'Screenshots',
+      footer_legal:'Legal', footer_terms:'Terms of use', footer_privacy:'Privacy', footer_disclaimer:'Educational disclaimer',
+      footer_rights:'All rights reserved.', footer_note:'Educational simulation only · no real money, accounts, or networks.',
+      login_h:'Welcome back', login_sub:'Enter your 64-character access key to unlock the simulator.',
+      login_btn:'Unlock Dashboard →', login_nokey:"Don't have a key?", login_get:'Get access for {price}'
+    },
+    ru: {
+      nav_features:'Возможности', nav_how:'Как это работает', nav_about:'О нас', nav_reviews:'Отзывы', nav_faq:'Вопросы',
+      login:'Войти',
+      hero_badge:'🔒 Разовая оплата · Мгновенный доступ',
+      hero_h1a:'Узнайте, как деньги', hero_h1b:'движутся на самом деле',
+      hero_sub:'Интерактивный симулятор, который превращает банковские переводы и криптотранзакции в понятную историю за считанные минуты. Без реальных денег. Без сложных терминов. Только ясность.',
+      hero_cta1:'Получить доступ за {price}', hero_cta2:'▶ Смотреть видео', hero_rating:'от 327+ учеников по всему миру',
+      logos_label:'Нам доверяют преподаватели и любознательные люди',
+      tag_features:'Возможности', features_h:'Всё, чтобы разобраться в деньгах',
+      features_p:'MoneyLab — это не учебник. Это практический симулятор, который показывает каждый шаг перевода в реальном времени.',
+      tag_how:'Как это работает', how_h:'От оплаты до понимания за четыре шага',
+      how_p:'Без звонков. Без загрузок. Просто оплатите, подтвердите, разблокируйте и учитесь.',
+      step1_t:'Оплатите {price} в криптовалюте', step1_p:'Выберите Bitcoin, Ethereum, BNB или Polygon. Живой курс конвертирует {price} в точную сумму для отправки.', step1_b:'BTC · ETH · BNB · MATIC',
+      step2_t:'Подтвердите транзакцию', step2_p:'Вставьте ID транзакции из вашего кошелька. Мы автоматически проверим блокчейн — без аккаунта и email.', step2_b:'Проверка в блокчейне',
+      step3_t:'Получите ключ доступа', step3_p:'После проверки свяжитесь с нами в Telegram, чтобы получить уникальный 64-символьный ключ. Скопируйте его — это ваш единственный ключ.', step3_b:'64-символьный ключ',
+      step4_t:'Разблокируйте симулятор', step4_p:'Вставьте ключ на экране входа и сразу начните изучать банковские и криптопереводы.', step4_b:'Мгновенный доступ',
+      tag_about:'Кто мы', about_h:'Создано преподавателями и инженерами, уставшими от путаницы в финансах',
+      about_p1:'MoneyLab начался как проект выходного дня после того, как мы увидели, как много умных людей кивают, слушая объяснения о финансах, но не понимают их по-настоящему. Мы верим, что проблема не в интеллекте — а в формате.',
+      about_p2:'Поэтому мы создали симулятор, который ведёт себя как настоящая система переводов, но объясняет себя простым языком на каждом шаге. Никаких графиков для заучивания. Никаких аббревиатур без контекста. Только ясный путь от «отправить» до «зачислено».',
+      about_s1:'Симуляция', about_s2:'Реальных денег', about_s3:'До первого «а-а»',
+      tag_video:'Смотреть', video_h:'Узнайте, почему прозрачность важна',
+      video_p:'Полноформатное видео о том, как системы могут скрывать происходящее — и почему ясные объяснения необходимы.',
+      tag_gallery:'Внутри MoneyLab', gallery_h:'Три взгляда на симулятор',
+      gallery_p:'Чисто, сфокусировано и создано, чтобы сложные идеи казались простыми.',
+      gal1:'Путь банковского перевода — каждый шаг простым языком.',
+      gal2:'Криптоперевод — от подписи до подтверждения в сети.',
+      gal3:'Живой журнал и уведомления делают каждое действие видимым.',
+      tag_pricing:'Получить доступ', pricing_h:'Одна оплата. Понимание навсегда.',
+      pricing_p:'Оплатите {price} в криптовалюте и получите ключ через Telegram.',
+      pricing_once:'Разовая оплата ·', pricing_lifetime:'Пожизненный доступ',
+      pay_send:'Отправьте ровно', pay_addr:'На адрес', pay_net:'Сеть', pay_rate:'Живой курс',
+      copy_btn:'📋 Скопировать адрес', rate_note:'Курсы обновляются каждые 60 секунд. Суммы приблизительны.',
+      paid_btn:'✅ Я оплатил — проверить транзакцию',
+      verify_h:'🔍 Подтвердите оплату', verify_p:'Вставьте ID транзакции (TXID) из кошелька или обозревателя блоков.',
+      verify_btn:'Проверить оплату', key_h:'✅ Оплата подтверждена',
+      key_contact:'Свяжитесь с нами в Telegram с вашим TXID, чтобы получить приватный ключ доступа.',
+      key_btn:'Открыть Telegram и получить ключ', key_login:'Уже есть ключ? Войти →',
+      tag_reviews:'Отзывы', reviews_h:'Нас любят ученики, родители и учителя',
+      reviews_p:'Настоящие отзывы людей, которые наконец поняли, как движутся деньги.',
+      tag_faq:'Вопросы', faq_h:'Ответы на вопросы', faq_p:'Всё, что стоит знать перед получением доступа.',
+      footer_p:'Интерактивное финансовое образование для любознательных. Поймите банковские и криптопереводы — без риска потерять деньги.',
+      footer_product:'Продукт', footer_pricing:'Цены', footer_resources:'Ресурсы', footer_video:'Видео', footer_shots:'Скриншоты',
+      footer_legal:'Правовая информация', footer_terms:'Условия', footer_privacy:'Конфиденциальность', footer_disclaimer:'Образовательная оговорка',
+      footer_rights:'Все права защищены.', footer_note:'Только образовательная симуляция · без реальных денег, аккаунтов и сетей.',
+      login_h:'С возвращением', login_sub:'Введите ваш 64-символьный ключ доступа, чтобы разблокировать симулятор.',
+      login_btn:'Разблокировать →', login_nokey:'Нет ключа?', login_get:'Получить доступ за {price}'
+    }
+  };
+
+  var CONTENT = {
+    en: {
+      features: [
+        { icon:'bank',   h:'Bank Wire Simulation',       p:'Watch a bank transfer move from balance check to SWIFT message to final settlement — with a kid-friendly explanation at every stage.' },
+        { icon:'crypto', h:'Crypto Transfer Simulation', p:'See how a signed transaction travels through the mempool, gets validated, packed into a block, and confirmed on-chain.' },
+        { icon:'bolt',   h:'Instant vs. Standard Speed', p:'Compare fast lanes and batched processing side by side. Understand why some transfers take seconds and others take days.' },
+        { icon:'chart',  h:'Live Ledger Log',            p:'A real-time log records every action as it happens, so learners can follow along or review the whole journey afterward.' },
+        { icon:'bell',   h:'Notifications & History',    p:'In-app notifications and a transfer history make the experience feel like a real banking app — without any real risk.' },
+        { icon:'shield', h:'Private Access Key',         p:'Your purchase unlocks a unique 64-character key delivered via Telegram. No accounts, no passwords, no personal data.' }
+      ],
+      reviews: [
+        { n:'Alex R.',  r:'Verified buyer',   t:'Finally understood what actually happens during a bank transfer. Worth every cent.', c:'#3b82f6', s:5 },
+        { n:'Priya K.', r:'Parent',           t:'I used it with my 13-year-old and now she explains crypto to me. That says it all.', c:'#8b5cf6', s:5 },
+        { n:'Marco D.', r:'Finance student',  t:'The step-by-step crypto flow made blockchains click in a way textbooks never did.', c:'#10b981', s:5 },
+        { n:'Lena S.',  r:'Teacher',          t:'Perfect classroom tool. No real money, no risk, and the kids actually stay engaged.', c:'#f59e0b', s:5 },
+        { n:'Yusuf A.', r:'Beginner',         t:'I was scared of crypto. Now I understand what a transaction really is. Great value.', c:'#3b82f6', s:5 },
+        { n:'Nina V.',  r:'Verified buyer',   t:'Clean interface, honest explanations, and instant access. Exactly what I wanted.', c:'#8b5cf6', s:5 }
+      ],
+      faq: [
+        ['Is this real money? Will my bank or crypto be touched?','No. MoneyLab is a 100% educational simulation. Every balance, IBAN, wallet address, and transaction is fictional. No real money moves, and no real financial network is accessed.'],
+        ['Do I need to know anything about crypto to use it?','Not at all. The simulator is designed for complete beginners. It explains every term in plain language and walks through each step visually.'],
+        ['How do I receive my access key after paying?','After you send the exact crypto amount, paste the transaction ID into the verification box. Once the blockchain confirms it, we will send your unique 64-character access key via Telegram.'],
+        ['What if I lose my access key?','Keep the key safe — it is the only way to unlock the simulator. Because there are no accounts or emails, we cannot recover it for you.'],
+        ['What age is this for?','The explanations are written for ages 12 and up, but adults who want a clear mental model of transfers get just as much value.'],
+        ['Is the payment secure?','Yes. Payments are made directly on public blockchains. We never ask for private keys, seed phrases, or personal information.'],
+        ['Can I use MoneyLab on my phone?','Yes. The simulator is fully responsive and works on phones, tablets, and desktops.'],
+        ['Why is the price so low?','We want financial clarity to be accessible. The price covers the cost of running and maintaining the simulator while keeping it affordable for students and teachers.']
+      ]
+    },
+    ru: {
+      features: [
+        { icon:'bank',   h:'Симулятор банковского перевода', p:'Проследите перевод от проверки баланса до SWIFT-сообщения и финального зачисления — с простыми объяснениями на каждом этапе.' },
+        { icon:'crypto', h:'Симулятор криптоперевода',       p:'Узнайте, как подписанная транзакция проходит через мемпул, проверку, попадает в блок и подтверждается в сети.' },
+        { icon:'bolt',   h:'Мгновенно или стандартно',       p:'Сравните быстрый и пакетный режимы. Поймите, почему одни переводы занимают секунды, а другие — дни.' },
+        { icon:'chart',  h:'Живой журнал операций',          p:'Журнал в реальном времени фиксирует каждое действие, чтобы можно было следить или вернуться к нему позже.' },
+        { icon:'bell',   h:'Уведомления и история',          p:'Уведомления и история переводов создают ощущение настоящего банковского приложения — без реального риска.' },
+        { icon:'shield', h:'Приватный ключ доступа',         p:'Покупка открывает уникальный 64-символьный ключ, доставляемый через Telegram. Без аккаунтов и паролей.' }
+      ],
+      reviews: [
+        { n:'Алексей Р.', r:'Покупатель', t:'Наконец понял, что на самом деле происходит при банковском переводе. Стоит каждого цента.', c:'#3b82f6', s:5 },
+        { n:'Прия К.',    r:'Родитель',   t:'Занимались с дочкой 13 лет — теперь она объясняет мне крипту. Это о многом говорит.', c:'#8b5cf6', s:5 },
+        { n:'Марко Д.',   r:'Студент',    t:'Пошаговый криптофлоу объяснил блокчейн так, как не смогли учебники.', c:'#10b981', s:5 },
+        { n:'Лена С.',    r:'Учитель',    t:'Отличный инструмент для класса. Без реальных денег, без риска — и дети вовлечены.', c:'#f59e0b', s:5 },
+        { n:'Юсуф А.',    r:'Новичок',    t:'Раньше боялся крипты. Теперь понимаю, что такое транзакция. Отличная цена.', c:'#3b82f6', s:5 },
+        { n:'Нина В.',    r:'Покупатель', t:'Чистый интерфейс, честные объяснения и мгновенный доступ. Именно то, что нужно.', c:'#8b5cf6', s:5 }
+      ],
+      faq: [
+        ['Это реальные деньги? Затрагиваются ли мой банк или крипта?','Нет. MoneyLab — это 100% образовательная симуляция. Все балансы, IBAN, адреса кошельков и транзакции вымышлены. Реальные деньги не двигаются, и реальные финансовые сети не используются.'],
+        ['Нужны ли знания о криптовалюте?','Совсем нет. Симулятор рассчитан на новичков. Он объясняет каждый термин простым языком и показывает каждый шаг визуально.'],
+        ['Как я получу ключ доступа после оплаты?','После отправки точной суммы криптовалюты вставьте ID транзакции в поле проверки. Как только блокчейн подтвердит её, мы отправим ваш уникальный 64-символьный ключ через Telegram.'],
+        ['Что делать, если я потеряю ключ?','Храните ключ в безопасности — это единственный способ разблокировать симулятор. Так как аккаунтов и email нет, восстановить его невозможно.'],
+        ['Для какого возраста это подходит?','Объяснения рассчитаны на возраст от 12 лет, но взрослые, желающие понять модель переводов, получат не меньше пользы.'],
+        ['Оплата безопасна?','Да. Оплата производится напрямую в публичных блокчейнах. Мы никогда не запрашиваем приватные ключи, seed-фразы или личные данные.'],
+        ['Можно ли использовать MoneyLab на телефоне?','Да. Симулятор полностью адаптивен и работает на телефонах, планшетах и компьютерах.'],
+        ['Почему такая низкая цена?','Мы хотим, чтобы финансовая ясность была доступной. Цена покрывает расходы на работу симулятора и остаётся доступной для учеников и учителей.']
+      ]
+    }
+  };
+
+  var SVG = {
+    bank:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M4 10h16M5 10V21M19 10V21M9 10V21M15 10V21M12 3L3 8h18L12 3z"/></svg>',
+    crypto:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.5h4a1.8 1.8 0 010 3.6h-3a1.8 1.8 0 000 3.6h4"/></svg>',
+    bolt:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"/></svg>',
+    chart: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-5 4 3 8-8"/><path d="M14 7h6v6"/><path d="M3 21h18"/></svg>',
+    bell:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9z"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg>',
+    shield:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"/><path d="M9 12l2 2 4-4"/></svg>',
+    card:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></svg>',
+    wallet:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h16a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"/><path d="M3 7l2-3h11l1 3"/><circle cx="17" cy="13" r="1.4" fill="currentColor" stroke="none"/></svg>',
+    globe: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 010 18M12 3a14 14 0 000 18"/></svg>',
+    scale: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M6 21h12M7 7l-4 7h8L7 7zM17 7l-4 7h8l-4-7z"/></svg>'
+  };
+
+  function priceString(){ return '$' + PRICE_USD.toLocaleString('en-US', {minimumFractionDigits:0, maximumFractionDigits:2}); }
+
+  function applyPrice(){
+    var short = priceString();
+    var amountEl = $('#priceAmount');
+    if(amountEl) amountEl.textContent = short;
+    var metaDesc = document.querySelector('meta[name="description"]');
+    if(metaDesc) metaDesc.content = metaDesc.content.replace(/\$\d+(\.\d+)?/g, short);
+    ['meta[property="og:description"]','meta[name="twitter:description"]'].forEach(function(sel){
+      var m = document.querySelector(sel);
+      if(m) m.content = m.content.replace(/\$\d+(\.\d+)?/g, short);
+    });
+    var ld = document.querySelector('script[type="application/ld+json"]');
+    if(ld){
+      try {
+        var data = JSON.parse(ld.textContent);
+        if(data['@graph']) data['@graph'].forEach(function(node){
+          if(node['@type'] === 'Product' && node.offers) node.offers.price = PRICE_USD.toFixed(2);
+        });
+        ld.textContent = JSON.stringify(data);
+      } catch(e){}
+    }
+  }
+
+  function applyLang(lang){
+    currentLang = lang;
+    document.documentElement.lang = lang === 'ru' ? 'ru' : 'en';
+    var short = priceString();
+    $$('[data-i18n]').forEach(function(el){
+      var key = el.getAttribute('data-i18n');
+      if(I18N[lang] && I18N[lang][key] !== undefined){
+        el.textContent = I18N[lang][key].replace(/\{price\}/g, short);
+      }
+    });
+    var tx = $('#txidInput');
+    if(tx) tx.placeholder = lang === 'ru' ? 'Введите хеш транзакции / TXID' : 'Enter transaction hash / TXID';
+    var lk = $('#loginKeyInput');
+    if(lk) lk.placeholder = lang === 'ru' ? 'Вставьте ключ доступа' : 'Paste your access key';
+    renderFeatures();
+    renderReviews();
+    renderFAQ();
+    updatePaymentDisplay();
+    $$('.lang-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.lang === lang); });
+    try { localStorage.setItem('moneylab_lang', lang); } catch(_){}
+  }
+
+  function renderFeatures(){
+    var list = CONTENT[currentLang].features;
+    $('#featuresGrid').innerHTML = list.map(function(f, i){
+      return '<div class="feature-card reveal" style="transition-delay:' + (i*0.07) + 's">' +
+        '<div class="feature-icon">' + (SVG[f.icon] || SVG.bank) + '</div>' +
+        '<h3>' + f.h + '</h3><p>' + f.p + '</p></div>';
+    }).join('');
+    observeReveals();
+  }
+
+  var reviewIndex = 0, reviewAutoTimer = null;
+  function visibleReviewCount(){ if(window.innerWidth <= 600) return 1; if(window.innerWidth <= 900) return 2; return 3; }
+
+  function renderReviews(){
+    var list = CONTENT[currentLang].reviews;
+    $('#reviewsTrack').innerHTML = list.map(function(r){
+      var stars = '★'.repeat(r.s) + '☆'.repeat(5 - r.s);
+      var initials = r.n.split(' ').map(function(w){ return w.charAt(0); }).join('').slice(0,2);
+      return '<div class="review-card"><div class="review-stars">' + stars + '</div>' +
+        '<p class="review-text">“' + r.t + '”</p>' +
+        '<div class="review-author"><div class="review-avatar" style="background:linear-gradient(135deg,' + r.c + ',rgba(0,0,0,.4))">' + initials + '</div>' +
+        '<div class="review-meta"><b>' + r.n + '</b><span>' + r.r + '</span></div></div></div>';
+    }).join('');
+    reviewIndex = 0; buildReviewDots(); updateReviews(); startReviewAuto();
+  }
+
+  function buildReviewDots(){
+    var total = CONTENT[currentLang].reviews.length;
+    var pages = Math.max(1, total - visibleReviewCount() + 1);
+    var html = '';
+    for(var i = 0; i < pages; i++) html += '<button class="rev-dot' + (i === 0 ? ' active' : '') + '" data-idx="' + i + '"></button>';
+    $('#revDots').innerHTML = html;
+    $$('.rev-dot').forEach(function(d){
+      d.addEventListener('click', function(){ reviewIndex = parseInt(d.dataset.idx, 10); updateReviews(); startReviewAuto(); });
+    });
+  }
+
+  function updateReviews(){
+    var vis = visibleReviewCount();
+    var maxIdx = Math.max(0, CONTENT[currentLang].reviews.length - vis);
+    if(reviewIndex > maxIdx) reviewIndex = maxIdx;
+    if(reviewIndex < 0) reviewIndex = 0;
+    var card = document.querySelector('.review-card');
+    var cardW = card ? card.getBoundingClientRect().width : 0;
+    $('#reviewsTrack').style.transform = 'translateX(-' + (reviewIndex * (cardW + 20)) + 'px)';
+    $$('.rev-dot').forEach(function(d, i){ d.classList.toggle('active', i === reviewIndex); });
+    $('#revPrev').disabled = reviewIndex <= 0;
+    $('#revNext').disabled = reviewIndex >= maxIdx;
+  }
+
+  function startReviewAuto(){
+    if(reviewAutoTimer) clearInterval(reviewAutoTimer);
+    reviewAutoTimer = setInterval(function(){
+      var maxIdx = Math.max(0, CONTENT[currentLang].reviews.length - visibleReviewCount());
+      reviewIndex = reviewIndex >= maxIdx ? 0 : reviewIndex + 1;
+      updateReviews();
+    }, 5000);
+  }
+
+  function initReviewsControls(){
+    $('#revPrev').addEventListener('click', function(){ reviewIndex = Math.max(0, reviewIndex - 1); updateReviews(); startReviewAuto(); });
+    $('#revNext').addEventListener('click', function(){
+      var maxIdx = Math.max(0, CONTENT[currentLang].reviews.length - visibleReviewCount());
+      reviewIndex = Math.min(maxIdx, reviewIndex + 1); updateReviews(); startReviewAuto();
+    });
+    var v = $('.reviews-viewport');
+    v.addEventListener('mouseenter', function(){ if(reviewAutoTimer) clearInterval(reviewAutoTimer); });
+    v.addEventListener('mouseleave', startReviewAuto);
+    window.addEventListener('resize', function(){ buildReviewDots(); updateReviews(); });
+  }
+
+  function renderFAQ(){
+    $('#faqList').innerHTML = CONTENT[currentLang].faq.map(function(item){
+      return '<details class="faq-item"><summary>' + item[0] + '</summary><p>' + item[1] + '</p></details>';
+    }).join('');
+  }
+
+  var LOGOS = [
+    { name:'NorthBridge Bank', icon: SVG.bank }, { name:'SwiftPay', icon: SVG.bolt },
+    { name:'LedgerTrust', icon: SVG.shield }, { name:'CoinFlow', icon: SVG.crypto },
+    { name:'Atlas Capital', icon: SVG.globe }, { name:'CardStack', icon: SVG.card },
+    { name:'WalletOne', icon: SVG.wallet }, { name:'BalanceWorks', icon: SVG.scale }
+  ];
+  function renderLogos(){
+    $('#logosTrack').innerHTML = LOGOS.concat(LOGOS).map(function(l){
+      return '<div class="logo-item">' + l.icon + '<span>' + l.name + '</span></div>';
+    }).join('');
+  }
+
+  var observer = null;
+  function observeReveals(){
+    if(!('IntersectionObserver' in window)){
+      $$('.reveal, .reveal-left, .reveal-right, .t-step').forEach(function(el){ el.classList.add('visible'); });
+      return;
+    }
+    if(observer) observer.disconnect();
+    observer = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          entry.target.classList.add('visible');
+          if(entry.target.classList.contains('t-step')) updateTimelineFill();
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.18, rootMargin: '0px 0px -40px 0px' });
+    $$('.reveal, .reveal-left, .reveal-right, .t-step').forEach(function(el){ observer.observe(el); });
+  }
+
+  function updateTimelineFill(){
+    var steps = $$('.t-step');
+    var fill = $('#timelineFill');
+    if(!fill) return;
+    var visible = 0;
+    steps.forEach(function(s){ if(s.classList.contains('visible')) visible++; });
+    fill.style.height = Math.min(100, (visible / (steps.length || 1)) * 100) + '%';
+  }
+
+  function initScrollUI(){
+    var progress = $('#scrollProgress'), back = $('#backToTop');
+    window.addEventListener('scroll', function(){
+      var h = document.documentElement;
+      var scrolled = h.scrollTop || document.body.scrollTop;
+      var height = h.scrollHeight - h.clientHeight;
+      progress.style.width = (height > 0 ? (scrolled / height) * 100 : 0) + '%';
+      back.classList.toggle('show', scrolled > 500);
+    }, { passive:true });
+    back.addEventListener('click', function(){ window.scrollTo({ top:0, behavior:'smooth' }); });
+  }
+
+  function fetchRates(){
+    var url = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,binancecoin,matic-network&vs_currencies=usd';
+    fetch(url).then(function(r){ return r.json(); }).then(function(data){
+      rates = {
+        BTC: data.bitcoin ? data.bitcoin.usd : null,
+        ETH: data.ethereum ? data.ethereum.usd : null,
+        BNB: data.binancecoin ? data.binancecoin.usd : null,
+        MATIC: data['matic-network'] ? data['matic-network'].usd : null
+      };
+      updatePaymentDisplay();
+    }).catch(function(){
+      rates = { BTC:60000, ETH:3000, BNB:550, MATIC:0.55 };
+      updatePaymentDisplay();
+    });
+  }
+
+  function updatePaymentDisplay(){
+    var cfg = CRYPTO_CONFIG[currentCoin];
+    var rate = rates[currentCoin];
+    if(!rate){
+      $('#cryptoAmountDisplay').textContent = '—';
+      $('#liveRateDisplay').textContent = currentLang === 'ru' ? 'Загрузка…' : 'Loading…';
+      return;
+    }
+    $('#cryptoAmountDisplay').textContent = Number(PRICE_USD / rate).toFixed(cfg.decimals) + ' ' + currentCoin;
+    $('#cryptoAddressDisplay').textContent = cfg.address;
+    $('#cryptoNetworkDisplay').textContent = cfg.network;
+    $('#liveRateDisplay').textContent = '1 ' + currentCoin + ' = $' + rate.toLocaleString('en-US', {maximumFractionDigits:2});
+  }
+
+  function initPricing(){
+    $$('.crypto-tab').forEach(function(tab){
+      tab.addEventListener('click', function(){
+        $$('.crypto-tab').forEach(function(t){ t.classList.remove('active'); });
+        tab.classList.add('active');
+        currentCoin = tab.dataset.coin;
+        updatePaymentDisplay();
+        $('#verificationSection').classList.add('hidden');
+        $('#keyReveal').style.display = 'none';
+        $('#verificationResult').className = 'verification-result';
+      });
+    });
+
+    $('#copyAddressBtn').addEventListener('click', function(){
+      var addr = CRYPTO_CONFIG[currentCoin].address;
+      var btn = $('#copyAddressBtn'), orig = btn.textContent;
+      function done(){ btn.textContent = currentLang === 'ru' ? '✅ Скопировано!' : '✅ Copied!'; setTimeout(function(){ btn.textContent = orig; }, 1500); }
+      function fallback(){
+        var ta = document.createElement('textarea');
+        ta.value = addr; document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); } catch(e){}
+        document.body.removeChild(ta); done();
+      }
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(addr).then(done).catch(fallback);
+      } else fallback();
+    });
+
+    $('#paidBtn').addEventListener('click', function(){
+      $('#verificationSection').classList.remove('hidden');
+      $('#verificationResult').className = 'verification-result';
+      $('#keyReveal').style.display = 'none';
+      $('#txidInput').value = '';
+      $('#txidInput').focus();
+      $('#verificationSection').scrollIntoView({behavior:'smooth', block:'center'});
+    });
+
+    $('#verifyBtn').addEventListener('click', function(){
+      var txid = $('#txidInput').value.trim();
+      if(!txid){
+        showVerify(currentLang === 'ru' ? 'Пожалуйста, введите ID транзакции (TXID).' : 'Please enter a transaction ID (TXID).', 'error');
+        return;
+      }
+      verifyPayment(txid);
+    });
+
+    $('#txidInput').addEventListener('keydown', function(e){ if(e.key === 'Enter') $('#verifyBtn').click(); });
+    $('#goToLoginBtn').addEventListener('click', openLoginModal);
+
+    var tg = $('#telegramKeyLink');
+    if(tg){
+      tg.href = TELEGRAM_URL;
+      var handle = $('#telegramHandle');
+      if(handle) handle.textContent = TELEGRAM_HANDLE;
+    }
+  }
+
+  function showVerify(msg, type){
+    var el = $('#verificationResult');
+    el.className = 'verification-result show ' + type;
+    el.textContent = msg;
+  }
+
+  function revealKey(){
+    showVerify(currentLang === 'ru'
+      ? '✅ Транзакция подтверждена! Свяжитесь с нами в Telegram, чтобы получить ключ.'
+      : '✅ Transaction confirmed! Contact us on Telegram to receive your key.', 'success');
+    $('#keyReveal').style.display = 'block';
+    var tg = $('#telegramKeyLink');
+    if(tg) tg.href = TELEGRAM_URL;
+    var h = $('#telegramHandle');
+    if(h) h.textContent = TELEGRAM_HANDLE;
+  }
+
+  function verifyPayment(txid){
+    var cfg = CRYPTO_CONFIG[currentCoin];
+    showVerify(currentLang === 'ru' ? '🔍 Проверяем транзакцию в блокчейне…' : '🔍 Checking transaction on the blockchain…', 'info');
+
+    if(currentCoin === 'BTC'){
+      fetch('https://blockchain.info/rawtx/' + encodeURIComponent(txid) + '?cors=true')
+        .then(function(r){ return r.json(); })
+        .then(function(data){
+          if(data && data.hash) revealKey();
+          else showVerify(currentLang === 'ru' ? '❌ Транзакция не найдена. Проверьте TXID.' : '❌ Transaction not found. Please check the TXID.', 'error');
+        })
+        .catch(function(){
+          showVerify(currentLang === 'ru' ? '⚠️ Автопроверка недоступна. Если вы оплатили — свяжитесь с нами в Telegram.' : '⚠️ Automatic verification unavailable. If you have paid, contact us on Telegram.', 'info');
+          revealKey();
+        });
+      return;
+    }
+
+    var chainId = currentCoin === 'ETH' ? 1 : currentCoin === 'BNB' ? 56 : 137;
+    var url = 'https://api.etherscan.io/v2/api?chainid=' + chainId + '&module=proxy&action=eth_getTransactionByHash&txhash=' + encodeURIComponent(txid);
+    fetch(url)
+      .then(function(r){ return r.json(); })
+      .then(function(data){
+        if(data && data.result && data.result.hash) revealKey();
+        else showVerify((currentLang === 'ru' ? '❌ Транзакция не найдена в сети ' : '❌ Transaction not found on ') + cfg.network + '.', 'error');
+      })
+      .catch(function(){
+        showVerify(currentLang === 'ru' ? '⚠️ Автопроверка недоступна. Если вы оплатили — свяжитесь с нами в Telegram.' : '⚠️ Automatic verification unavailable. If you have paid, contact us on Telegram.', 'info');
+        revealKey();
+      });
+  }
+
+  var NAMES_EN = ['User23','Alex','Maya','Jordan','Sam','Riley','Casey','Taylor','Avery','Quinn','Elena','Marcus','Priya','Noah','Zoe','Leo','Nina','Omar','Sofia','Kai'];
+  var NAMES_RU = ['Алексей','Мария','Иван','Анна','Дмитрий','Ольга','Сергей','Екатерина','Павел','Наталья','Артём','Юлия','Максим','Алина','Роман','Дарья','Кирилл','Полина','Егор','Вера'];
+
+  function showPurchaseToast(){
+    var pool = currentLang === 'ru' ? NAMES_RU : NAMES_EN;
+    var name = pool[Math.floor(Math.random() * pool.length)];
+    var el = document.createElement('div');
+    el.className = 'purchase-toast';
+    var text = currentLang === 'ru' ? 'только что купил премиум-доступ' : 'just bought premium access';
+    el.innerHTML = '<span class="p-icon">✅</span><div><b>' + name + '</b> ' + text + '</div>';
+    $('#purchaseToasts').appendChild(el);
+    setTimeout(function(){ el.classList.add('out'); setTimeout(function(){ el.remove(); }, 320); }, 5500);
+  }
+  function schedulePurchaseToast(){
+    setTimeout(function(){ showPurchaseToast(); schedulePurchaseToast(); }, NOTIFICATION_INTERVAL_MS);
+  }
+
+  function openLoginModal(){
+    $('#loginModal').classList.remove('hidden');
+    $('#loginKeyInput').value = '';
+    $('#loginKeyInput').type = 'password';
+    $('#loginError').textContent = '';
+    setTimeout(function(){ $('#loginKeyInput').focus(); }, 50);
+  }
+  function closeLoginModal(){
+    $('#loginModal').classList.add('hidden');
+    $('#loginKeyInput').value = '';
+    $('#loginError').textContent = '';
+  }
+  function initLogin(){
+    // openLogin may not exist (removed from header), so guard it
+    var openBtn = $('#openLogin');
+    if(openBtn) openBtn.addEventListener('click', openLoginModal);
+
+    var footBtn = $('#footerLogin');
+    if(footBtn) footBtn.addEventListener('click', function(e){ e.preventDefault(); openLoginModal(); });
+
+    $('#closeLogin').addEventListener('click', closeLoginModal);
+    $('#loginModal').addEventListener('click', function(e){ if(e.target === $('#loginModal')) closeLoginModal(); });
+    $('#loginSubmit').addEventListener('click', function(){
+      var val = $('#loginKeyInput').value.replace(/\s+/g, '').toLowerCase();
+      if(val === ACCESS_KEY){
+        try { sessionStorage.setItem('moneylab_auth', '1'); } catch(_){}
+        closeLoginModal();
+        alert(currentLang === 'ru' ? 'Доступ открыт! В полной версии здесь откроется панель MoneyLab.' : 'Access granted! In the full product, this would open the MoneyLab dashboard.');
+      } else {
+        $('#loginError').textContent = currentLang === 'ru' ? 'Неверный ключ. Проверьте и попробуйте снова.' : 'Invalid access key. Please check it and try again.';
+        $('#loginKeyInput').select();
+      }
+    });
+    $('#loginKeyInput').addEventListener('keydown', function(e){ if(e.key === 'Enter') $('#loginSubmit').click(); });
+    $('#modalBuyLink').addEventListener('click', function(e){
+      e.preventDefault();
+      closeLoginModal();
+      document.querySelector('#pricing').scrollIntoView({behavior:'smooth'});
+    });
+  }
+
+  function initAnchors(){
+    $$('a[href^="#"]').forEach(function(a){
+      a.addEventListener('click', function(e){
+        var href = a.getAttribute('href');
+        if(href === '#' || href.length < 2) return;
+        var target = document.querySelector(href);
+        if(target){
+          e.preventDefault();
+          var header = document.querySelector('.site-header');
+          var offset = (header ? header.offsetHeight : 60) + 12;
+          var y = target.getBoundingClientRect().top + window.pageYOffset - offset;
+          window.scrollTo({ top:y, behavior:'smooth' });
+        }
+      });
+    });
+  }
+
+  function boot(){
+    var saved = 'en';
+    try { saved = localStorage.getItem('moneylab_lang') || 'en'; } catch(_){}
+    if(saved !== 'ru') saved = 'en';
+
+    renderLogos();
+    applyPrice();
+    applyLang(saved);
+
+    $$('.lang-btn').forEach(function(btn){
+      btn.addEventListener('click', function(){ applyLang(btn.dataset.lang); });
+    });
+
+    initReviewsControls();
+    initPricing();
+    initLogin();
+    initScrollUI();
+    initAnchors();
+
+    fetchRates();
+    setInterval(fetchRates, 60000);
+    schedulePurchaseToast();
+
+    observeReveals();
+    window.addEventListener('load', updateTimelineFill);
+    window.addEventListener('resize', updateTimelineFill);
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', boot);
+  } else { boot(); }
+
+})();
+</script>
+</body>
+</html>
