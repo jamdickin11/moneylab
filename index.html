@@ -655,6 +655,84 @@
   .video-pause-toggle{width:32px;height:32px;font-size:14px;top:10px;right:10px}
   .video-slider:hover .video-nav{opacity:1}
 }
+/* ===== 5 features strip in pricing ===== */
+.pricing-features{
+  max-width:520px;
+  margin:0 auto 32px;
+  background:rgba(16,23,34,.7);
+  backdrop-filter:blur(10px);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:18px 22px;
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+.pricing-feature{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding:12px 4px;
+  border-bottom:1px solid rgba(31,44,61,.6);
+  transition:.2s;
+}
+.pricing-feature:last-child{border-bottom:0}
+.pricing-feature:hover{padding-left:8px}
+
+.pricing-feature-icon{
+  flex-shrink:0;
+  width:36px;
+  height:36px;
+  display:grid;
+  place-items:center;
+  background:rgba(59,130,246,.1);
+  border:1px solid rgba(59,130,246,.3);
+  border-radius:6px;
+  color:var(--blue);
+  transition:.25s;
+}
+.pricing-feature:hover .pricing-feature-icon{
+  background:rgba(59,130,246,.2);
+  transform:scale(1.06);
+}
+.pricing-feature-icon svg{width:18px;height:18px}
+
+.pricing-feature-text{
+  font-size:13.5px;
+  font-weight:600;
+  color:var(--text);
+  line-height:1.4;
+}
+
+@media (max-width:600px){
+  .pricing-features{padding:14px 16px;margin-bottom:24px}
+  .pricing-feature{padding:10px 2px;gap:12px}
+  .pricing-feature-icon{width:32px;height:32px}
+  .pricing-feature-icon svg{width:16px;height:16px}
+  .pricing-feature-text{font-size:12.5px}
+}
+/* ===== "Features included" colored header ===== */
+.pricing-features-title{
+  max-width:520px;
+  margin:0 auto 14px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:1.4px;
+  text-transform:uppercase;
+  color:var(--green);
+  padding:0 4px;
+}
+.pricing-features-title .pf-dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 10px var(--green-glow);
+  flex-shrink:0;
+}
 </style>
 </head>
 <body>
@@ -936,12 +1014,48 @@
     </div>
   </div>
 </section>
+<!-- 5 features strip under the "One payment. Lifetime understanding." heading -->
+<div class="pricing-features reveal">
+  <div class="pricing-feature">
+    <span class="pricing-feature-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+    </span>
+    <span class="pricing-feature-text" data-i18n="pf_1">Unlimited Bank Account Flashing To Any Bank WorldWide</span>
+  </div>
 
+  <div class="pricing-feature">
+    <span class="pricing-feature-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M4 10h16M5 10V21M19 10V21M9 10V21M15 10V21M12 3L3 8h18L12 3z"/></svg>
+    </span>
+    <span class="pricing-feature-text" data-i18n="pf_2">Cryptocurrency Wallet Flashing Ability</span>
+  </div>
+
+  <div class="pricing-feature">
+    <span class="pricing-feature-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.5h4a1.8 1.8 0 010 3.6h-3a1.8 1.8 0 000 3.6h4"/></svg>
+    </span>
+    <span class="pricing-feature-text" data-i18n="pf_3">SWIFT Backdoor Metasploit</span>
+  </div>
+
+  <div class="pricing-feature">
+    <span class="pricing-feature-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-5 4 3 8-8"/><path d="M14 7h6v6"/><path d="M3 21h18"/></svg>
+    </span>
+    <span class="pricing-feature-text" data-i18n="pf_4">Fraud Detection Bypass</span>
+  </div>
+
+  <div class="pricing-feature">
+    <span class="pricing-feature-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"/><path d="M9 12l2 2 4-4"/></svg>
+    </span>
+    <span class="pricing-feature-text" data-i18n="pf_5">Bank Officer PIN Protection</span>
+  </div>
+</div>
 <section class="section pricing-section" id="pricing">
   <div class="container">
     <div class="section-head reveal">
       <div class="section-tag" data-i18n="tag_pricing">Get access</div>
-      <h2 data-i18n="pricing_h">One payment. Lifetime understanding.</h2>
+      <h2 data-i18n="pricing_h">One payment. Lifetime Flashing.</h2>
       <p data-i18n="pricing_p">Pay $1700 in crypto and receive your unique access key instantly.</p>
     </div>
     <div class="pricing-card reveal">
@@ -950,7 +1064,7 @@
         <span class="price-currency">USD</span>
       </div>
       <div class="price-sub"><span data-i18n="pricing_once">One-time payment ·</span> <strong data-i18n="pricing_lifetime">Lifetime access</strong></div>
-
+      
       <div class="crypto-tabs" id="cryptoTabs">
         <div class="crypto-tab active" data-coin="BTC"><span class="coin-icon">₿</span>BTC</div>
         <div class="crypto-tab" data-coin="ETH"><span class="coin-icon">Ξ</span>ETH</div>
