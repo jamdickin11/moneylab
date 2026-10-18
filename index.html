@@ -536,6 +536,125 @@
   border-radius:5px;
   background:var(--blue);
 }
+/* ===== Video slider ===== */
+.video-slider{
+  position:relative;
+  max-width:920px;
+  margin:0 auto;
+  border-radius:10px;
+  overflow:hidden;
+  border:1px solid var(--border);
+  box-shadow:0 20px 60px rgba(0,0,0,.6);
+  aspect-ratio:16/9;
+  background:#000;
+}
+.video-slider-track{
+  position:relative;
+  width:100%;
+  height:100%;
+}
+.video-slide{
+  position:absolute;
+  inset:0;
+  opacity:0;
+  visibility:hidden;
+  transition:opacity .5s ease, visibility .5s ease;
+  pointer-events:none;
+}
+.video-slide.active{
+  opacity:1;
+  visibility:visible;
+  pointer-events:auto;
+  z-index:1;
+}
+.slider-video{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  background:#000;
+  display:block;
+}
+
+/* Navigation arrows */
+.video-nav{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,.3);
+  background:rgba(7,10,16,.6);
+  backdrop-filter:blur(6px);
+  color:#fff;
+  font-size:22px;
+  line-height:1;
+  cursor:pointer;
+  display:grid;
+  place-items:center;
+  z-index:3;
+  transition:.2s;
+  opacity:0;
+}
+.video-slider:hover .video-nav{opacity:1}
+.video-nav:hover{background:rgba(59,130,246,.8);border-color:var(--blue)}
+.video-prev{left:14px}
+.video-next{right:14px}
+
+/* Dots */
+.video-dots{
+  position:absolute;
+  bottom:14px;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  gap:8px;
+  z-index:3;
+}
+.video-dot{
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  border:0;
+  padding:0;
+  background:rgba(255,255,255,.4);
+  cursor:pointer;
+  transition:.25s;
+}
+.video-dot.active{
+  width:24px;
+  border-radius:5px;
+  background:var(--blue);
+}
+
+/* Pause / play toggle */
+.video-pause-toggle{
+  position:absolute;
+  top:14px;
+  right:14px;
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,.3);
+  background:rgba(7,10,16,.6);
+  backdrop-filter:blur(6px);
+  color:#fff;
+  font-size:16px;
+  cursor:pointer;
+  display:grid;
+  place-items:center;
+  z-index:3;
+  transition:.2s;
+}
+.video-pause-toggle:hover{background:rgba(59,130,246,.8)}
+
+@media (max-width:768px){
+  .video-nav{width:36px;height:36px;font-size:18px}
+  .video-prev{left:8px}
+  .video-next{right:8px}
+  .video-pause-toggle{width:32px;height:32px;font-size:14px;top:10px;right:10px}
+  .video-slider:hover .video-nav{opacity:1}
+}
 </style>
 </head>
 <body>
@@ -780,10 +899,36 @@
       <h2 data-i18n="video_h">See why transparency matters</h2>
       <p data-i18n="video_p">A full-length featured video on how systems can hide what is really happening — and why clear explanations are essential.</p>
     </div>
-    <div class="video-wrapper reveal">
-      <video src="https://moneylab-flash.vercel.app/video.mp4" controls playsinline preload="metadata" poster="https://moneylab-flash.vercel.app/image.png">
-        Your browser does not support the video tag.
-      </video>
+
+    <div class="video-slider reveal" id="videoSlider">
+      <div class="video-slider-track" id="videoTrack">
+        <div class="video-slide active" data-index="0">
+          <video class="slider-video"
+                 src="https://moneylab-flash.vercel.app/video.mp4"
+                 playsinline muted preload="metadata" controls></video>
+        </div>
+        <div class="video-slide" data-index="1">
+          <video class="slider-video"
+                 src="https://moneylab-flash.vercel.app/video2.mp4"
+                 playsinline muted preload="metadata" controls></video>
+        </div>
+        <div class="video-slide" data-index="2">
+          <video class="slider-video"
+                 src="https://moneylab-flash.vercel.app/video3.mp4"
+                 playsinline muted preload="metadata" controls></video>
+        </div>
+      </div>
+
+      <button class="video-nav video-prev" id="videoPrev" aria-label="Previous video">‹</button>
+      <button class="video-nav video-next" id="videoNext" aria-label="Next video">›</button>
+
+      <div class="video-dots" id="videoDots">
+        <button class="video-dot active" data-idx="0" aria-label="Video 1"></button>
+        <button class="video-dot" data-idx="1" aria-label="Video 2"></button>
+        <button class="video-dot" data-idx="2" aria-label="Video 3"></button>
+      </div>
+
+      <button class="video-pause-toggle" id="videoPauseToggle" aria-label="Pause autoplay">⏸</button>
     </div>
   </div>
 </section>
