@@ -453,6 +453,89 @@
   @media(prefers-reduced-motion:reduce){
     *{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
   }
+  /* About section image slider */
+.about-visual{
+  display:block;              /* overrides the old grid/center layout */
+  padding:0;
+  background:#0b1018;
+}
+.about-slider{
+  position:relative;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  border-radius:10px;
+}
+.about-slide{
+  position:absolute;
+  inset:0;
+  opacity:0;
+  transform:scale(1.02);
+  transition:opacity .7s ease, transform .7s ease;
+  pointer-events:none;
+}
+.about-slide.active{
+  opacity:1;
+  transform:scale(1);
+  pointer-events:auto;
+  z-index:1;
+}
+.about-slide img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+
+.about-slide-nav{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,.25);
+  background:rgba(7,10,16,.55);
+  backdrop-filter:blur(6px);
+  color:#fff;
+  font-size:20px;
+  line-height:1;
+  cursor:pointer;
+  display:grid;
+  place-items:center;
+  z-index:3;
+  transition:.2s;
+  opacity:0;
+}
+.about-visual:hover .about-slide-nav{opacity:1}
+.about-slide-nav:hover{background:rgba(59,130,246,.7);border-color:var(--blue)}
+.about-prev{left:12px}
+.about-next{right:12px}
+
+.about-slide-dots{
+  position:absolute;
+  bottom:12px;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  gap:7px;
+  z-index:3;
+}
+.about-dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  border:0;
+  padding:0;
+  background:rgba(255,255,255,.4);
+  cursor:pointer;
+  transition:.25s;
+}
+.about-dot.active{
+  width:22px;
+  border-radius:5px;
+  background:var(--blue);
+}
 </style>
 </head>
 <body>
@@ -1456,6 +1539,60 @@
     document.addEventListener('DOMContentLoaded', boot);
   } else { boot(); }
 
+})();
+</script>
+<script>
+(function(){
+  'use strict';
+  var slider  = document.getElementById('aboutSlider');
+  if(!slider) return;
+
+  var slides  = slider.querySelectorAll('.about-slide');
+  var dots    = slider.querySelectorAll('.about-dot');
+  var prevBtn = document.getElementById('aboutPrev');
+  var nextBtn = document.getElementById('aboutNext');
+
+  var index = 0;
+  var timer = null;
+  var DELAY = 4000; // 4 seconds per slide
+
+  function go(i){
+    if(i < 0) i = slides.length - 1;
+    if(i >= slides.length) i = 0;
+    index = i;
+    slides.forEach(function(s, idx){ s.classList.toggle('active', idx === index); });
+    dots.forEach(function(d, idx){ d.classList.toggle('active', idx === index); });
+  }
+
+  function next(){ go(index + 1); }
+  function prev(){ go(index - 1); }
+
+  function start(){
+    stop();
+    timer = setInterval(next, DELAY);
+  }
+  function stop(){
+    if(timer){ clearInterval(timer); timer = null; }
+  }
+
+  prevBtn.addEventListener('click', function(){ prev(); start(); });
+  nextBtn.addEventListener('click', function(){ next(); start(); });
+  dots.forEach(function(d, idx){
+    d.addEventListener('click', function(){ go(idx); start(); });
+  });
+
+  // Pause on hover, resume on leave
+  slider.addEventListener('mouseenter', stop);
+  slider.addEventListener('mouseleave', start);
+
+  // Pause when tab is hidden (saves CPU)
+  document.addEventListener('visibilitychange', function(){
+    if(document.hidden) stop();
+    else start();
+  });
+
+  go(0);
+  start();
 })();
 </script>
 </body>
