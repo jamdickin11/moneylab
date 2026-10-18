@@ -663,14 +663,28 @@
           <div class="stat"><b>2 to 15 days</b><span data-i18n="about_s3">Befozre before diissepearing</span></div>
         </div>
       </div>
-      <div class="about-visual reveal-right" aria-hidden="true">
-        <div class="float-icons">
-          <div class="f-icon f-1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21h18M4 10h16M5 10V21M19 10V21M9 10V21M15 10V21M12 3L3 8h18L12 3z"/></svg></div>
-          <div class="f-icon f-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.5h4a1.8 1.8 0 010 3.6h-3a1.8 1.8 0 000 3.6h4"/></svg></div>
-          <div class="f-icon f-3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></svg></div>
-          <div class="f-icon f-4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"/><path d="M9 12l2 2 4-4"/></svg></div>
-          <div class="f-icon f-5"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 17l5-5 4 3 8-8"/><path d="M14 7h6v6"/></svg></div>
-        </div>
+      <div class="about-visual reveal-right" aria-label="MoneyLab preview">
+  <div class="about-slider" id="aboutSlider">
+    <div class="about-slide active">
+      <img src="https://moneylab-flash.vercel.app/image2.png" alt="MoneyLab preview 1" loading="lazy">
+    </div>
+    <div class="about-slide">
+      <img src="https://moneylab-flash.vercel.app/image3.png" alt="MoneyLab preview 2" loading="lazy">
+    </div>
+    <div class="about-slide">
+      <img src="https://moneylab-flash.vercel.app/image4.png" alt="MoneyLab preview 3" loading="lazy">
+    </div>
+
+    <button class="about-slide-nav about-prev" id="aboutPrev" aria-label="Previous image">‹</button>
+    <button class="about-slide-nav about-next" id="aboutNext" aria-label="Next image">›</button>
+
+    <div class="about-slide-dots" id="aboutDots">
+      <button class="about-dot active" data-idx="0" aria-label="Image 1"></button>
+      <button class="about-dot" data-idx="1" aria-label="Image 2"></button>
+      <button class="about-dot" data-idx="2" aria-label="Image 3"></button>
+    </div>
+  </div>
+</div>
       </div>
     </div>
   </div>
@@ -869,7 +883,7 @@
       logos_label:'Withdrawable Flash Funds',
       tag_features:'Features', features_h:'We Offer A Full Flashing Solution',
       features_p:'The most advanced bank account flashing system which are designed for financial professionals.',
-      tag_how:'How it works', how_h:'From payment to flashing in four steps',
+      tag_how:'How it works', how_h:'Flashing in four steps',
       how_p:'No onboarding calls. No downloads. Just pay, verify, unlock, and flash.',
       step1_t:'Pay {price} in crypto', step1_p:'Choose Bitcoin, Ethereum, BNB, or Polygon. The live rate converts {price} into the exact amount you need to send.', step1_b:'BTC · ETH · BNB · MATIC',
       step2_t:'Verify your transaction', step2_p:'Paste the transaction ID from your wallet. We check the blockchain automatically — no account or email needed.', step2_b:'On-chain verification',
